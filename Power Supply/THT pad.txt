@@ -1,0 +1,37 @@
+Pad name  Top pad shape      Inner pad shape    Bottom pad shape   Annular ring Pad diameter Drill diameter Trace clearance 
+----------------------------------------------------------------------------------------------------------------------------
+C1, Pin - Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+C1, Pin + Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+C2, Pin - Round pad          Round pad          Round pad          18.5000      72.0000      35.0000        9.0000          
+C2, Pin + Round pad          Round pad          Round pad          18.5000      72.0000      35.0000        9.0000          
+C3, Pin - Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+C3, Pin + Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+C4, Pin - Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+C4, Pin + Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+D1, Pin A Round pad          Round pad          Round pad          15.8150      72.0000      40.3701        9.0000          
+D1, Pin C Round pad          Round pad          Round pad          15.8150      72.0000      40.3701        9.0000          
+D2, Pin A Round pad          Round pad          Round pad          22.4409      100.0000     55.1181        10.0000         
+D2, Pin C Square pad         Square pad         Square pad         22.4409      100.0000     55.1181        10.0000         
+D3, Pin A Round pad          Round pad          Round pad          15.8150      72.0000      40.3701        9.0000          
+D3, Pin C Round pad          Round pad          Round pad          15.8150      72.0000      40.3701        9.0000          
+D4, Pin A Round pad          Round pad          Round pad          15.8150      72.0000      40.3701        9.0000          
+D4, Pin C Round pad          Round pad          Round pad          15.8150      72.0000      40.3701        9.0000          
+D5, Pin A Round pad          Round pad          Round pad          15.8150      72.0000      40.3701        9.0000          
+D5, Pin C Round pad          Round pad          Round pad          15.8150      72.0000      40.3701        9.0000          
+J1, Pin 1 Rounded square pad Rounded square pad Rounded square pad 15.4724      90.0000      59.0551        9.0000          
+J1, Pin 2 Round pad          Round pad          Round pad          0.0000       1.0000       1.0000         9.0000          
+J1, Pin 3 Round pad          Round pad          Round pad          15.4724      90.0000      59.0551        9.0000          
+J2, Pin 1 Rounded square pad Rounded square pad Rounded square pad 16.3150      72.0000      39.3701        9.0000          
+J2, Pin 2 Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+J3, Pin 1 Rounded square pad Rounded square pad Rounded square pad 16.3150      72.0000      39.3701        9.0000          
+J3, Pin 2 Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+J4, Pin 1 Rounded square pad Rounded square pad Rounded square pad 16.3150      72.0000      39.3701        9.0000          
+J4, Pin 2 Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+J5, Pin 1 Rounded square pad Rounded square pad Rounded square pad 16.3150      72.0000      39.3701        9.0000          
+J5, Pin 2 Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+J5, Pin 3 Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+J5, Pin 4 Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+J5, Pin 5 Round pad          Round pad          Round pad          16.3150      72.0000      39.3701        9.0000          
+L1, Pin - Round pad          Round pad          Round pad          18.5000      72.0000      35.0000        9.0000          
+L1, Pin + Round pad          Round pad          Round pad          18.5000      72.0000      35.0000        9.0000          
+----------------------------------------------------------------------------------------------------------------------------

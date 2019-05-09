@@ -1,0 +1,1 @@
+-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\USER -I.\CMSIS -I.\LIB\inc -I "d:\Keil\ARM\INC" -I "d:\Keil\ARM\INC\ST\STM32F10x" -o ".\USER\Output\w5200.o" --omf_browse ".\USER\Output\w5200.crf" --depend ".\USER\Output\w5200.d" "USER\W5200.c"

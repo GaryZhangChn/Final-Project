@@ -1,0 +1,14 @@
+Export log for : DRF1609H-PCB-CADASCII.Rep
+AddingPadStyle (Default)
+AddingPadStyle EF71X79TOP1
+AddingPadStyle P:EX71Y71D391
+Adding ViaStyle (Default)
+Adding TextStyle (Default)
+Adding TextStyle T:H60W10
+Adding TextStyle T:H59W10
+Adding PatternDef DRF1609H-SMT_1
+Adding PatternDef DRF1609H-DIP_1
+Adding CompDef DRF1609H-SMT_1
+Adding CompDef DRF1609H-DIP_1
+ 
+EndLog

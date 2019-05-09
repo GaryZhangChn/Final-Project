@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>E.R. Monitoring System</title>
+	</head>
+		<style>
+		.section{
+			background:darkgray;
+		}
+		</style>
+
+	<body>
+	<H1>Pi server</H1>
+	<form method="post" action="data.php">
+	<fieldset>
+		<label for="data">Humidity</label>
+		<input type="radio" name="data" value="humidity" id="check_data"/><br>
+		<label for="data">Temerature</label>
+		<input type="radio" name="data" value="temperature" id="check_data"/><br>
+		<label for="data">Environment log</label>		
+		<input type="radio" name="data" value="Environment log" id="check_data"/><br>
+		<label for="data">Allert</label>
+		<input type="radio" name="data" value="buzzer" id="check_data"/><br>
+		<input type="submit" value="submit"/>
+	</fieldset>
+	</form>
+	</body>
+</html>

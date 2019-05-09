@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ASCII"?>
+<MCUProject Schema="67" Class="CMCUProject" Path="" PathAbs="" ProjectType="0">
+<ProjectFolders/>
+<ProjectFiles>
+<FileItem>
+<MCUFile Class="CMCUFile" Path="&amp;ASCmain.asm" PathAbs="&amp;ASCF:\Dawson_college_2018_Fall_Semester\Embedded_System_Hardware\Labs\Lab_7\Diagram_screenshot\Atmega8516\Embedded_System_Hardware\main.asm" UseFileOptions="0" FileOptions=""/>
+</FileItem>
+</ProjectFiles>
+<BuildSettings>
+<MCUProjectBuildSettings Class="CMCUProjectBuildSettings" ToolGroupType="0" IntermediatePath="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" IntermediatePathAbs="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" OutputPath="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" OutputPathAbs="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" TargetFileType="6" SimPath="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" SimPathAbs="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" SimFile="&amp;ASCmain.hex" CodeLoadType="0">
+<Assembler>
+<MCUToolSettings Class="CMCUToolSettings" ToolType="0" IntermediatePath="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" IntermediatePathAbs="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" OutputPath="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" OutputPathAbs="&amp;ASCC:\Users\AndyBian\Documents\National Instruments\Circuit Design Suite 14.0\MCU Workspaces\Atmega8515\Embedded_System_Hardware\" TargetType="6" IncludeOptions="&amp;ASC$MOD51" PreFilenameOptions="" PostFilenameOptions="">
+<MCULibraries/>
+</MCUToolSettings>
+</Assembler>
+</MCUProjectBuildSettings>
+</BuildSettings>
+</MCUProject>

@@ -1,0 +1,970 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        09/10/2014  14:42:19  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL\C51\BIN\BL51.EXE main.obj, W5500.obj TO Project RAMSIZE (256)
+
+
+MEMORY MODEL: LARGE
+
+
+INPUT MODULES INCLUDED:
+  main.obj (MAIN)
+  W5500.obj (W5500)
+  D:\KEIL\C51\LIB\C51L.LIB (?C_STARTUP)
+  D:\KEIL\C51\LIB\C51L.LIB (?C?COPY)
+  D:\KEIL\C51\LIB\C51L.LIB (?C?CLDPTR)
+  D:\KEIL\C51\LIB\C51L.LIB (?C?CSTPTR)
+  D:\KEIL\C51\LIB\C51L.LIB (?C?IILDX)
+  D:\KEIL\C51\LIB\C51L.LIB (?C?ILDIX)
+  D:\KEIL\C51\LIB\C51L.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  Project (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *  X D A T A   M E M O R Y  * * * * * * *
+            XDATA   0000H     0060H     UNIT         ?XD?W5500
+            XDATA   0060H     0015H     UNIT         _XDATA_GROUP_
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     01D3H     UNIT         ?PR?_READ_SOCK_DATA_BUFFER?W5500
+            CODE    01D6H     018DH     UNIT         ?PR?_WRITE_SOCK_DATA_BUFFER?W5500
+            CODE    0363H     014DH     UNIT         ?C?LIB_CODE
+            CODE    04B0H     00B2H     UNIT         ?PR?DETECT_GATEWAY?W5500
+            CODE    0562H     0097H     UNIT         ?PR?W5500_INIT?W5500
+            CODE    05F9H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0685H     0087H     UNIT         ?PR?W5500_INTERRUPT_PROCESS?W5500
+            CODE    070CH     0084H     UNIT         ?PR?MAIN?MAIN
+            CODE    0790H     0074H     UNIT         ?PR?LOAD_NET_PARAMETERS?MAIN
+            CODE    0804H     0049H     UNIT         ?PR?_SPI_SEND_BYTE?W5500
+            CODE    084DH     0048H     UNIT         ?PR?_PROCESS_SOCKET_DATA?MAIN
+            CODE    0895H     0044H     UNIT         ?PR?W5500_SOCKET_SET?MAIN
+            CODE    08D9H     0043H     UNIT         ?PR?_SOCKET_LISTEN?W5500
+            CODE    091CH     0036H     UNIT         ?PR?_WRITE_W5500_SOCK_4BYTE?W5500
+            CODE    0952H     0035H     UNIT         ?PR?_WRITE_W5500_NBYTE?W5500
+            CODE    0987H     0035H     UNIT         ?PR?_SOCKET_CONNECT?W5500
+            CODE    09BCH     002EH     UNIT         ?PR?_SOCKET_UDP?W5500
+            CODE    09EAH     002DH     UNIT         ?PR?_SOCKET_INIT?W5500
+            CODE    0A17H     002AH     UNIT         ?PR?_WRITE_W5500_SOCK_2BYTE?W5500
+            CODE    0A41H     0023H     UNIT         ?PR?_READ_W5500_SOCK_2BYTE?W5500
+            CODE    0A64H     0022H     UNIT         ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+            CODE    0A86H     0020H     UNIT         ?PR?_DELAY?MAIN
+            CODE    0AA6H     001EH     UNIT         ?PR?W5500_HARDWARE_RESET?W5500
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 2
+
+
+            CODE    0AC4H     001DH     UNIT         ?PR?SPI_READ_BYTE?W5500
+            CODE    0AE1H     001BH     UNIT         ?PR?_READ_W5500_SOCK_1BYTE?W5500
+            CODE    0AFCH     001AH     UNIT         ?CO?MAIN
+            CODE    0B16H     0018H     UNIT         ?PR?_WRITE_W5500_2BYTE?W5500
+            CODE    0B2EH     0016H     UNIT         ?PR?_SPI_SEND_SHORT?W5500
+            CODE    0B44H     0014H     UNIT         ?PR?_WRITE_W5500_1BYTE?W5500
+            CODE    0B58H     0010H     UNIT         ?PR?_READ_W5500_1BYTE?W5500
+            CODE    0B68H     000BH     UNIT         ?PR?W5500_INITIALIZATION?MAIN
+            CODE    0B73H     0009H     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   Project (MAIN)
+
+
+SEGMENT                                     XDATA_GROUP
+  +--> CALLED SEGMENT                     START    LENGTH
+---------------------------------------------------------
+?C_C51STARTUP                             -----    -----
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN                             0060H    0002H
+  +--> ?PR?LOAD_NET_PARAMETERS?MAIN
+  +--> ?PR?W5500_HARDWARE_RESET?W5500
+  +--> ?PR?W5500_INITIALIZATION?MAIN
+  +--> ?PR?W5500_SOCKET_SET?MAIN
+  +--> ?PR?W5500_INTERRUPT_PROCESS?W5500
+  +--> ?PR?_PROCESS_SOCKET_DATA?MAIN
+  +--> ?CO?MAIN
+  +--> ?PR?_WRITE_SOCK_DATA_BUFFER?W5500
+
+?PR?W5500_HARDWARE_RESET?W5500            -----    -----
+  +--> ?PR?_DELAY?MAIN
+  +--> ?PR?_READ_W5500_1BYTE?W5500
+
+?PR?_READ_W5500_1BYTE?W5500               -----    -----
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+  +--> ?PR?SPI_READ_BYTE?W5500
+
+?PR?_SPI_SEND_SHORT?W5500                 -----    -----
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+
+?PR?SPI_READ_BYTE?W5500                   -----    -----
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+
+?PR?W5500_INITIALIZATION?MAIN             -----    -----
+  +--> ?PR?W5500_INIT?W5500
+  +--> ?PR?DETECT_GATEWAY?W5500
+  +--> ?PR?_SOCKET_INIT?W5500
+
+?PR?W5500_INIT?W5500                      -----    -----
+  +--> ?PR?_WRITE_W5500_1BYTE?W5500
+  +--> ?PR?_DELAY?MAIN
+  +--> ?PR?_WRITE_W5500_NBYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 3
+
+
+  +--> ?PR?_WRITE_W5500_2BYTE?W5500
+
+?PR?_WRITE_W5500_1BYTE?W5500              -----    -----
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+
+?PR?_WRITE_W5500_NBYTE?W5500              0062H    0007H
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+
+?PR?_WRITE_W5500_SOCK_1BYTE?W5500         -----    -----
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+
+?PR?_WRITE_W5500_2BYTE?W5500              -----    -----
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+
+?PR?DETECT_GATEWAY?W5500                  0062H    0005H
+  +--> ?PR?_WRITE_W5500_SOCK_4BYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+  +--> ?PR?_DELAY?MAIN
+  +--> ?PR?_READ_W5500_SOCK_1BYTE?W5500
+
+?PR?_WRITE_W5500_SOCK_4BYTE?W5500         0071H    0004H
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+
+?PR?_READ_W5500_SOCK_1BYTE?W5500          -----    -----
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?SPI_READ_BYTE?W5500
+
+?PR?_SOCKET_INIT?W5500                    0063H    0001H
+  +--> ?PR?_WRITE_W5500_SOCK_2BYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_4BYTE?W5500
+
+?PR?_WRITE_W5500_SOCK_2BYTE?W5500         -----    -----
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+
+?PR?W5500_SOCKET_SET?MAIN                 -----    -----
+  +--> ?PR?_SOCKET_LISTEN?W5500
+  +--> ?PR?_SOCKET_CONNECT?W5500
+  +--> ?PR?_SOCKET_UDP?W5500
+
+?PR?_SOCKET_LISTEN?W5500                  0062H    0001H
+  +--> ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+  +--> ?PR?_DELAY?MAIN
+  +--> ?PR?_READ_W5500_SOCK_1BYTE?W5500
+
+?PR?_SOCKET_CONNECT?W5500                 0062H    0001H
+  +--> ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+  +--> ?PR?_DELAY?MAIN
+  +--> ?PR?_READ_W5500_SOCK_1BYTE?W5500
+
+?PR?_SOCKET_UDP?W5500                     0062H    0001H
+  +--> ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 4
+
+
+  +--> ?PR?_DELAY?MAIN
+  +--> ?PR?_READ_W5500_SOCK_1BYTE?W5500
+
+?PR?W5500_INTERRUPT_PROCESS?W5500         0062H    0001H
+  +--> ?PR?_READ_W5500_1BYTE?W5500
+  +--> ?PR?_READ_W5500_SOCK_1BYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+  +--> ?PR?_SOCKET_INIT?W5500
+
+?PR?_PROCESS_SOCKET_DATA?MAIN             0062H    0003H
+  +--> ?PR?_READ_SOCK_DATA_BUFFER?W5500
+  +--> ?PR?_WRITE_SOCK_DATA_BUFFER?W5500
+
+?PR?_READ_SOCK_DATA_BUFFER?W5500          0065H    000DH
+  +--> ?PR?_READ_W5500_SOCK_2BYTE?W5500
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+  +--> ?PR?SPI_READ_BYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_2BYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+
+?PR?_READ_W5500_SOCK_2BYTE?W5500          -----    -----
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?SPI_READ_BYTE?W5500
+
+?PR?_WRITE_SOCK_DATA_BUFFER?W5500         0065H    000CH
+  +--> ?PR?_READ_W5500_SOCK_1BYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_4BYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_2BYTE?W5500
+  +--> ?PR?_READ_W5500_SOCK_2BYTE?W5500
+  +--> ?PR?_SPI_SEND_SHORT?W5500
+  +--> ?PR?_SPI_SEND_BYTE?W5500
+  +--> ?PR?_WRITE_W5500_SOCK_1BYTE?W5500
+
+
+
+SYMBOL TABLE OF MODULE:  Project (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00B0H         PUBLIC        P3
+  C:0790H         PUBLIC        Load_Net_Parameters
+  C:084DH         PUBLIC        _Process_Socket_Data
+  C:070CH         PUBLIC        main
+  C:0B68H         PUBLIC        W5500_Initialization
+  C:0A86H         PUBLIC        _Delay
+  C:0895H         PUBLIC        W5500_Socket_Set
+  -------         PROC          W5500_INITIALIZATION
+  C:0B68H         LINE#         39
+  C:0B68H         LINE#         40
+  C:0B68H         LINE#         41
+  C:0B6BH         LINE#         42
+  C:0B6EH         LINE#         43
+  -------         ENDPROC       W5500_INITIALIZATION
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 5
+
+
+  -------         PROC          LOAD_NET_PARAMETERS
+  C:0790H         LINE#         54
+  C:0790H         LINE#         55
+  C:0790H         LINE#         56
+  C:0796H         LINE#         57
+  C:079AH         LINE#         58
+  C:079EH         LINE#         59
+  C:07A0H         LINE#         61
+  C:07A6H         LINE#         62
+  C:07A8H         LINE#         63
+  C:07AAH         LINE#         64
+  C:07ADH         LINE#         66
+  C:07B3H         LINE#         67
+  C:07B7H         LINE#         68
+  C:07BBH         LINE#         69
+  C:07BFH         LINE#         70
+  C:07C2H         LINE#         71
+  C:07C5H         LINE#         73
+  C:07CBH         LINE#         74
+  C:07CFH         LINE#         75
+  C:07D3H         LINE#         76
+  C:07D7H         LINE#         78
+  C:07DDH         LINE#         79
+  C:07E1H         LINE#         81
+  C:07E7H         LINE#         82
+  C:07EBH         LINE#         83
+  C:07EFH         LINE#         84
+  C:07F3H         LINE#         86
+  C:07F9H         LINE#         87
+  C:07FDH         LINE#         89
+  C:0803H         LINE#         90
+  -------         ENDPROC       LOAD_NET_PARAMETERS
+  -------         PROC          W5500_SOCKET_SET
+  C:0895H         LINE#         101
+  C:0895H         LINE#         102
+  C:0895H         LINE#         103
+  C:089BH         LINE#         104
+  C:089BH         LINE#         105
+  C:08A1H         LINE#         106
+  C:08A1H         LINE#         107
+  C:08A8H         LINE#         108
+  C:08AAH         LINE#         110
+  C:08AAH         LINE#         111
+  C:08ACH         LINE#         112
+  C:08B3H         LINE#         113
+  C:08B3H         LINE#         114
+  C:08BBH         LINE#         115
+  C:08C2H         LINE#         117
+  C:08C2H         LINE#         118
+  C:08C4H         LINE#         120
+  C:08C4H         LINE#         121
+  C:08CCH         LINE#         122
+  C:08D3H         LINE#         124
+  C:08D8H         LINE#         125
+  C:08D8H         LINE#         126
+  C:08D8H         LINE#         127
+  -------         ENDPROC       W5500_SOCKET_SET
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 6
+
+
+  -------         PROC          _PROCESS_SOCKET_DATA
+  X:0062H         SYMBOL        s
+  -------         DO            
+  X:0063H         SYMBOL        size
+  -------         ENDDO         
+  C:084DH         LINE#         140
+  C:0852H         LINE#         141
+  C:0852H         LINE#         143
+  C:0863H         LINE#         144
+  C:087AH         LINE#         145
+  -------         ENDPROC       _PROCESS_SOCKET_DATA
+  -------         PROC          MAIN
+  -------         DO            
+  X:0060H         SYMBOL        W5500_Send_Delay_Counter
+  -------         ENDDO         
+  C:070CH         LINE#         156
+  C:070CH         LINE#         157
+  C:070CH         LINE#         158
+  C:0713H         LINE#         160
+  C:0716H         LINE#         161
+  C:0719H         LINE#         162
+  C:071CH         LINE#         163
+  C:071CH         LINE#         164
+  C:071CH         LINE#         165
+  C:071FH         LINE#         167
+  C:0722H         LINE#         169
+  C:072AH         LINE#         170
+  C:072AH         LINE#         171
+  C:072DH         LINE#         172
+  C:0732H         LINE#         173
+  C:0734H         LINE#         174
+  C:0743H         LINE#         175
+  C:0743H         LINE#         176
+  C:074BH         LINE#         177
+  C:074BH         LINE#         178
+  C:0752H         LINE#         179
+  C:0765H         LINE#         180
+  C:0779H         LINE#         181
+  C:0779H         LINE#         182
+  C:0780H         LINE#         183
+  C:0780H         LINE#         184
+  C:078EH         LINE#         185
+  -------         ENDPROC       MAIN
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        x
+  -------         DO            
+  D:0002H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:0A86H         LINE#         196
+  C:0A86H         LINE#         197
+  C:0A86H         LINE#         200
+  C:0A89H         LINE#         201
+  C:0AA5H         LINE#         202
+  -------         ENDPROC       _DELAY
+  -------         ENDMOD        MAIN
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 7
+
+
+  -------         MODULE        W5500
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00B0H         PUBLIC        P3
+  X:0000H         PUBLIC        Rx_Buffer
+  X:001EH         PUBLIC        Tx_Buffer
+  X:003CH         PUBLIC        S0_Port
+  X:003EH         PUBLIC        Phy_Addr
+  C:04B0H         PUBLIC        Detect_Gateway
+  C:0562H         PUBLIC        W5500_Init
+  X:0044H         PUBLIC        Sub_Mask
+  C:0685H         PUBLIC        W5500_Interrupt_Process
+  C:0987H         PUBLIC        _Socket_Connect
+  C:0AA6H         PUBLIC        W5500_Hardware_Reset
+  C:0B58H         PUBLIC        _Read_W5500_1Byte
+  C:0003H         PUBLIC        _Read_SOCK_Data_Buffer
+  B:00B0H.7       PUBLIC        W5500_SCLK
+  C:09BCH         PUBLIC        _Socket_UDP
+  C:0B44H         PUBLIC        _Write_W5500_1Byte
+  C:0B16H         PUBLIC        _Write_W5500_2Byte
+  C:0AEAH         PUBLIC        _Read_W5500_SOCK_1Byte
+  C:01D6H         PUBLIC        _Write_SOCK_Data_Buffer
+  C:0A41H         PUBLIC        _Read_W5500_SOCK_2Byte
+  B:00B0H.5       PUBLIC        W5500_MOSI
+  B:00B0H.4       PUBLIC        W5500_MISO
+  C:08D9H         PUBLIC        _Socket_Listen
+  X:0048H         PUBLIC        S0_DIP
+  C:0AC8H         PUBLIC        SPI_Read_Byte
+  C:0A6CH         PUBLIC        _Write_W5500_SOCK_1Byte
+  C:0A25H         PUBLIC        _Write_W5500_SOCK_2Byte
+  C:0B36H         PUBLIC        _SPI_Send_Short
+  C:0924H         PUBLIC        _Write_W5500_SOCK_4Byte
+  X:004CH         PUBLIC        S0_DPort
+  C:082CH         PUBLIC        _SPI_Send_Byte
+  X:004EH         PUBLIC        Gateway_IP
+  X:0052H         PUBLIC        UDP_DPORT
+  X:0054H         PUBLIC        W5500_Interrupt
+  X:0055H         PUBLIC        S0_Data
+  C:09EAH         PUBLIC        _Socket_Init
+  X:0056H         PUBLIC        S0_State
+  X:0057H         PUBLIC        S0_Mode
+  B:00B0H.6       PUBLIC        W5500_SCS
+  C:0952H         PUBLIC        _Write_W5500_nByte
+  X:0058H         PUBLIC        IP_Addr
+  X:005CH         PUBLIC        UDP_DIPR
+  B:00B0H.2       PUBLIC        W5500_RST
+  -------         PROC          L?0117
+  -------         ENDPROC       L?0117
+  -------         PROC          SPI_READ_BYTE
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0007H         SYMBOL        rByte
+  -------         ENDDO         
+  C:0AC8H         LINE#         54
+  C:0AC8H         LINE#         55
+  C:0AC8H         LINE#         56
+  C:0ACAH         LINE#         58
+  C:0ACCH         LINE#         59
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 8
+
+
+  C:0ACDH         LINE#         60
+  C:0ACDH         LINE#         61
+  C:0ACFH         LINE#         62
+  C:0AD3H         LINE#         63
+  C:0AD9H         LINE#         64
+  C:0ADBH         LINE#         65
+  C:0AE0H         LINE#         66
+  C:0AE0H         LINE#         67
+  -------         ENDPROC       SPI_READ_BYTE
+  C:081BH         SYMBOL        L?0106
+  -------         PROC          L?0105
+  -------         ENDPROC       L?0105
+  C:081BH         SYMBOL        L?0106
+  -------         PROC          _SPI_SEND_BYTE
+  D:0007H         SYMBOL        dt
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:082CH         LINE#         77
+  C:082CH         LINE#         78
+  C:082CH         LINE#         81
+  C:082EH         LINE#         82
+  C:082EH         LINE#         83
+  C:0830H         LINE#         84
+  C:083DH         LINE#         85
+  C:0841H         LINE#         87
+  C:0843H         LINE#         88
+  C:0845H         LINE#         89
+  C:084AH         LINE#         90
+  C:084CH         LINE#         91
+  -------         ENDPROC       _SPI_SEND_BYTE
+  C:0B30H         SYMBOL        L?0112
+  -------         PROC          L?0111
+  -------         ENDPROC       L?0111
+  C:0B30H         SYMBOL        L?0112
+  -------         PROC          _SPI_SEND_SHORT
+  D:0004H         SYMBOL        dt
+  C:0B36H         LINE#         101
+  C:0B3AH         LINE#         102
+  C:0B3AH         LINE#         103
+  C:0B3FH         LINE#         104
+  -------         ENDPROC       _SPI_SEND_SHORT
+  -------         PROC          _WRITE_W5500_1BYTE
+  D:0006H         SYMBOL        reg
+  D:0003H         SYMBOL        dat
+  C:0B44H         LINE#         115
+  C:0B46H         LINE#         116
+  C:0B46H         LINE#         117
+  C:0B48H         LINE#         119
+  C:0B4BH         LINE#         120
+  C:0B50H         LINE#         121
+  C:0B55H         LINE#         123
+  C:0B57H         LINE#         124
+  -------         ENDPROC       _WRITE_W5500_1BYTE
+  -------         PROC          _WRITE_W5500_2BYTE
+  D:0006H         SYMBOL        reg
+  D:0002H         SYMBOL        dat
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 9
+
+
+  C:0B16H         LINE#         134
+  C:0B1AH         LINE#         135
+  C:0B1AH         LINE#         136
+  C:0B1CH         LINE#         138
+  C:0B1FH         LINE#         139
+  C:0B24H         LINE#         140
+  C:0B2BH         LINE#         142
+  C:0B2DH         LINE#         143
+  -------         ENDPROC       _WRITE_W5500_2BYTE
+  -------         PROC          _WRITE_W5500_NBYTE
+  D:0006H         SYMBOL        reg
+  X:0064H         SYMBOL        dat_ptr
+  X:0067H         SYMBOL        size
+  -------         DO            
+  D:0004H         SYMBOL        i
+  -------         ENDDO         
+  C:0952H         LINE#         153
+  C:095DH         LINE#         154
+  C:095DH         LINE#         157
+  C:095FH         LINE#         159
+  C:0962H         LINE#         160
+  C:0967H         LINE#         162
+  C:0977H         LINE#         163
+  C:0977H         LINE#         164
+  C:097DH         LINE#         165
+  C:0984H         LINE#         167
+  C:0986H         LINE#         168
+  -------         ENDPROC       _WRITE_W5500_NBYTE
+  C:0A64H         SYMBOL        L?0108
+  C:0A66H         SYMBOL        L?0109
+  C:0A68H         SYMBOL        L?0110
+  -------         PROC          L?0107
+  -------         ENDPROC       L?0107
+  C:0A64H         SYMBOL        L?0108
+  C:0A66H         SYMBOL        L?0109
+  C:0A68H         SYMBOL        L?0110
+  -------         PROC          _WRITE_W5500_SOCK_1BYTE
+  D:0002H         SYMBOL        s
+  D:0004H         SYMBOL        reg
+  D:0003H         SYMBOL        dat
+  C:0A6CH         LINE#         178
+  C:0A6EH         LINE#         179
+  C:0A6EH         LINE#         180
+  C:0A6EH         LINE#         182
+  C:0A71H         LINE#         183
+  C:0A7EH         LINE#         184
+  C:0A83H         LINE#         186
+  C:0A85H         LINE#         187
+  -------         ENDPROC       _WRITE_W5500_SOCK_1BYTE
+  -------         PROC          L?0115
+  -------         ENDPROC       L?0115
+  -------         PROC          _WRITE_W5500_SOCK_2BYTE
+  D:0001H         SYMBOL        s
+  D:0004H         SYMBOL        reg
+  D:0002H         SYMBOL        dat
+  C:0A25H         LINE#         197
+  C:0A27H         LINE#         198
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 10
+
+
+  C:0A27H         LINE#         199
+  C:0A27H         LINE#         201
+  C:0A2AH         LINE#         202
+  C:0A37H         LINE#         203
+  C:0A3EH         LINE#         205
+  C:0A40H         LINE#         206
+  -------         ENDPROC       _WRITE_W5500_SOCK_2BYTE
+  -------         PROC          L?0116
+  -------         ENDPROC       L?0116
+  -------         PROC          _WRITE_W5500_SOCK_4BYTE
+  X:0071H         SYMBOL        s
+  D:0004H         SYMBOL        reg
+  X:0072H         SYMBOL        dat_ptr
+  C:0924H         LINE#         216
+  C:0932H         LINE#         217
+  C:0932H         LINE#         218
+  C:0932H         LINE#         220
+  C:0935H         LINE#         221
+  C:0945H         LINE#         223
+  C:0946H         LINE#         224
+  C:0949H         LINE#         225
+  C:094CH         LINE#         226
+  C:094FH         LINE#         228
+  C:0951H         LINE#         229
+  -------         ENDPROC       _WRITE_W5500_SOCK_4BYTE
+  -------         PROC          _READ_W5500_1BYTE
+  D:0006H         SYMBOL        reg
+  -------         DO            
+  D:0007H         SYMBOL        i
+  -------         ENDDO         
+  C:0B58H         LINE#         239
+  C:0B58H         LINE#         240
+  C:0B58H         LINE#         243
+  C:0B5AH         LINE#         245
+  C:0B5DH         LINE#         246
+  C:0B62H         LINE#         247
+  C:0B65H         LINE#         249
+  C:0B67H         LINE#         250
+  C:0B67H         LINE#         251
+  -------         ENDPROC       _READ_W5500_1BYTE
+  C:0AE4H         SYMBOL        L?0114
+  -------         PROC          L?0113
+  -------         ENDPROC       L?0113
+  C:0AE4H         SYMBOL        L?0114
+  -------         PROC          _READ_W5500_SOCK_1BYTE
+  D:0003H         SYMBOL        s
+  D:0004H         SYMBOL        reg
+  -------         DO            
+  D:0007H         SYMBOL        i
+  -------         ENDDO         
+  C:0AEAH         LINE#         261
+  C:0AEAH         LINE#         262
+  C:0AEAH         LINE#         265
+  C:0AEAH         LINE#         267
+  C:0AEDH         LINE#         268
+  C:0AF6H         LINE#         269
+  C:0AF9H         LINE#         271
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 11
+
+
+  C:0AFBH         LINE#         272
+  C:0AFBH         LINE#         273
+  -------         ENDPROC       _READ_W5500_SOCK_1BYTE
+  -------         PROC          _READ_W5500_SOCK_2BYTE
+  D:0003H         SYMBOL        s
+  D:0004H         SYMBOL        reg
+  -------         DO            
+  D:0004H         SYMBOL        i
+  -------         ENDDO         
+  C:0A41H         LINE#         283
+  C:0A41H         LINE#         284
+  C:0A41H         LINE#         287
+  C:0A41H         LINE#         289
+  C:0A44H         LINE#         290
+  C:0A4DH         LINE#         292
+  C:0A52H         LINE#         293
+  C:0A56H         LINE#         294
+  C:0A5EH         LINE#         296
+  C:0A60H         LINE#         297
+  C:0A63H         LINE#         298
+  -------         ENDPROC       _READ_W5500_SOCK_2BYTE
+  -------         PROC          _READ_SOCK_DATA_BUFFER
+  X:0065H         SYMBOL        s
+  X:0066H         SYMBOL        dat_ptr
+  -------         DO            
+  X:0069H         SYMBOL        rx_size
+  X:006BH         SYMBOL        offset
+  X:006DH         SYMBOL        offset1
+  X:006FH         SYMBOL        i
+  X:0071H         SYMBOL        j
+  -------         ENDDO         
+  C:0003H         LINE#         308
+  C:0013H         LINE#         309
+  C:0013H         LINE#         315
+  C:0022H         LINE#         316
+  C:0028H         LINE#         317
+  C:003EH         LINE#         319
+  C:0052H         LINE#         320
+  C:0058H         LINE#         321
+  C:0063H         LINE#         323
+  C:0065H         LINE#         325
+  C:0068H         LINE#         326
+  C:0076H         LINE#         328
+  C:008DH         LINE#         329
+  C:008DH         LINE#         330
+  C:00ACH         LINE#         331
+  C:00ACH         LINE#         332
+  C:00B4H         LINE#         333
+  C:00C3H         LINE#         334
+  C:00CDH         LINE#         335
+  C:00DDH         LINE#         336
+  C:00DDH         LINE#         338
+  C:00DDH         LINE#         339
+  C:00F0H         LINE#         340
+  C:010CH         LINE#         341
+  C:010CH         LINE#         342
+  C:0114H         LINE#         343
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 12
+
+
+  C:0123H         LINE#         344
+  C:012DH         LINE#         345
+  C:013DH         LINE#         346
+  C:013FH         LINE#         348
+  C:0141H         LINE#         350
+  C:0147H         LINE#         351
+  C:0155H         LINE#         353
+  C:016AH         LINE#         354
+  C:016AH         LINE#         355
+  C:0172H         LINE#         356
+  C:0181H         LINE#         357
+  C:018BH         LINE#         358
+  C:019BH         LINE#         359
+  C:019BH         LINE#         360
+  C:019DH         LINE#         362
+  C:01B1H         LINE#         363
+  C:01C5H         LINE#         364
+  C:01CDH         LINE#         365
+  C:01D5H         LINE#         366
+  -------         ENDPROC       _READ_SOCK_DATA_BUFFER
+  -------         PROC          _WRITE_SOCK_DATA_BUFFER
+  X:0065H         SYMBOL        s
+  X:0066H         SYMBOL        dat_ptr
+  X:0069H         SYMBOL        size
+  -------         DO            
+  X:006BH         SYMBOL        offset
+  X:006DH         SYMBOL        offset1
+  X:006FH         SYMBOL        i
+  -------         ENDDO         
+  C:01D6H         LINE#         376
+  C:01E6H         LINE#         377
+  C:01E6H         LINE#         382
+  C:01F3H         LINE#         383
+  C:01F3H         LINE#         384
+  C:0202H         LINE#         385
+  C:021BH         LINE#         386
+  C:021BH         LINE#         388
+  C:022FH         LINE#         389
+  C:0235H         LINE#         390
+  C:0240H         LINE#         392
+  C:0242H         LINE#         394
+  C:0245H         LINE#         395
+  C:0255H         LINE#         397
+  C:026CH         LINE#         398
+  C:026CH         LINE#         399
+  C:028BH         LINE#         400
+  C:028BH         LINE#         401
+  C:0291H         LINE#         402
+  C:02A1H         LINE#         403
+  C:02A1H         LINE#         405
+  C:02A1H         LINE#         406
+  C:02B4H         LINE#         407
+  C:02D0H         LINE#         408
+  C:02D0H         LINE#         409
+  C:02D6H         LINE#         410
+  C:02E6H         LINE#         411
+  C:02E8H         LINE#         413
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 13
+
+
+  C:02EAH         LINE#         415
+  C:02F0H         LINE#         416
+  C:0300H         LINE#         418
+  C:0315H         LINE#         419
+  C:0315H         LINE#         420
+  C:031BH         LINE#         421
+  C:032BH         LINE#         422
+  C:032BH         LINE#         423
+  C:032DH         LINE#         425
+  C:0341H         LINE#         426
+  C:0355H         LINE#         427
+  -------         ENDPROC       _WRITE_SOCK_DATA_BUFFER
+  -------         PROC          W5500_HARDWARE_RESET
+  C:0AA6H         LINE#         438
+  C:0AA6H         LINE#         439
+  C:0AA6H         LINE#         440
+  C:0AA8H         LINE#         441
+  C:0AAFH         LINE#         442
+  C:0AB1H         LINE#         443
+  C:0AB8H         LINE#         444
+  C:0AC3H         LINE#         445
+  -------         ENDPROC       W5500_HARDWARE_RESET
+  -------         PROC          W5500_INIT
+  -------         DO            
+  D:0001H         SYMBOL        i
+  -------         ENDDO         
+  C:0562H         LINE#         455
+  C:0562H         LINE#         456
+  C:0562H         LINE#         457
+  C:0564H         LINE#         459
+  C:056BH         LINE#         460
+  C:0572H         LINE#         464
+  C:0588H         LINE#         468
+  C:059EH         LINE#         473
+  C:05B4H         LINE#         477
+  C:05CAH         LINE#         480
+  C:05CCH         LINE#         481
+  C:05CCH         LINE#         482
+  C:05D7H         LINE#         483
+  C:05E0H         LINE#         484
+  C:05E5H         LINE#         488
+  C:05F0H         LINE#         492
+  -------         ENDPROC       W5500_INIT
+  -------         PROC          DETECT_GATEWAY
+  -------         DO            
+  X:0062H         SYMBOL        ip_adde
+  -------         DO            
+  X:0066H         SYMBOL        j
+  -------         ENDDO         
+  -------         ENDDO         
+  C:04B0H         LINE#         503
+  C:04B0H         LINE#         504
+  C:04B0H         LINE#         506
+  C:04B9H         LINE#         507
+  C:04C2H         LINE#         508
+  C:04CBH         LINE#         509
+  C:04D4H         LINE#         512
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 14
+
+
+  C:04DBH         LINE#         513
+  C:04E4H         LINE#         514
+  C:04EDH         LINE#         515
+  C:04F4H         LINE#         517
+  C:0502H         LINE#         518
+  C:0502H         LINE#         519
+  C:050DH         LINE#         520
+  C:0510H         LINE#         521
+  C:0510H         LINE#         523
+  C:051BH         LINE#         526
+  C:051BH         LINE#         527
+  C:0520H         LINE#         528
+  C:0529H         LINE#         529
+  C:052BH         LINE#         530
+  C:0536H         LINE#         531
+  C:053DH         LINE#         532
+  C:0544H         LINE#         533
+  C:0544H         LINE#         534
+  C:0547H         LINE#         535
+  C:0547H         LINE#         536
+  C:0554H         LINE#         537
+  C:0554H         LINE#         538
+  C:055FH         LINE#         539
+  C:0561H         LINE#         540
+  C:0561H         LINE#         541
+  C:0561H         LINE#         542
+  -------         ENDPROC       DETECT_GATEWAY
+  -------         PROC          _SOCKET_INIT
+  X:0063H         SYMBOL        s
+  C:09EAH         LINE#         552
+  C:09EFH         LINE#         553
+  C:09EFH         LINE#         555
+  C:09FCH         LINE#         557
+  C:09FFH         LINE#         558
+  C:09FFH         LINE#         559
+  C:09FFH         LINE#         561
+  C:0A07H         LINE#         563
+  C:0A0FH         LINE#         565
+  C:0A16H         LINE#         567
+  C:0A16H         LINE#         569
+  C:0A16H         LINE#         570
+  C:0A16H         LINE#         572
+  C:0A16H         LINE#         573
+  C:0A16H         LINE#         575
+  C:0A16H         LINE#         576
+  C:0A16H         LINE#         578
+  C:0A16H         LINE#         579
+  C:0A16H         LINE#         581
+  C:0A16H         LINE#         582
+  C:0A16H         LINE#         584
+  C:0A16H         LINE#         585
+  C:0A16H         LINE#         587
+  C:0A16H         LINE#         588
+  C:0A16H         LINE#         590
+  C:0A16H         LINE#         591
+  C:0A16H         LINE#         592
+  C:0A16H         LINE#         593
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 15
+
+
+  -------         ENDPROC       _SOCKET_INIT
+  -------         PROC          _SOCKET_CONNECT
+  X:0062H         SYMBOL        s
+  C:0987H         LINE#         605
+  C:098CH         LINE#         606
+  C:098CH         LINE#         607
+  C:0994H         LINE#         608
+  C:0997H         LINE#         609
+  C:099EH         LINE#         610
+  C:09A9H         LINE#         611
+  C:09A9H         LINE#         612
+  C:09ACH         LINE#         613
+  C:09AFH         LINE#         614
+  C:09AFH         LINE#         615
+  C:09B9H         LINE#         616
+  C:09BBH         LINE#         617
+  -------         ENDPROC       _SOCKET_CONNECT
+  -------         PROC          _SOCKET_LISTEN
+  X:0062H         SYMBOL        s
+  C:08D9H         LINE#         628
+  C:08DEH         LINE#         629
+  C:08DEH         LINE#         630
+  C:08E6H         LINE#         631
+  C:08E9H         LINE#         632
+  C:08F0H         LINE#         633
+  C:08F8H         LINE#         634
+  C:08F8H         LINE#         635
+  C:08F8H         LINE#         636
+  C:08FAH         LINE#         637
+  C:08FAH         LINE#         638
+  C:0904H         LINE#         639
+  C:090BH         LINE#         640
+  C:0913H         LINE#         641
+  C:0913H         LINE#         642
+  C:0916H         LINE#         643
+  C:0919H         LINE#         644
+  C:0919H         LINE#         646
+  C:091BH         LINE#         651
+  -------         ENDPROC       _SOCKET_LISTEN
+  -------         PROC          _SOCKET_UDP
+  X:0062H         SYMBOL        s
+  C:09BCH         LINE#         662
+  C:09C1H         LINE#         663
+  C:09C1H         LINE#         664
+  C:09C9H         LINE#         665
+  C:09CFH         LINE#         666
+  C:09D6H         LINE#         667
+  C:09E1H         LINE#         668
+  C:09E1H         LINE#         669
+  C:09E4H         LINE#         670
+  C:09E7H         LINE#         671
+  C:09E7H         LINE#         673
+  C:09E9H         LINE#         678
+  -------         ENDPROC       _SOCKET_UDP
+  -------         PROC          W5500_INTERRUPT_PROCESS
+  -------         DO            
+  D:0007H         SYMBOL        i
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 16
+
+
+  X:0062H         SYMBOL        j
+  C:0685H         SYMBOL        IntDispose
+  -------         ENDDO         
+  C:0685H         LINE#         688
+  C:0685H         LINE#         689
+  C:0685H         LINE#         692
+  C:0685H         LINE#         694
+  C:068CH         LINE#         695
+  C:0690H         LINE#         696
+  C:0690H         LINE#         697
+  C:069FH         LINE#         698
+  C:06A8H         LINE#         699
+  C:06ADH         LINE#         700
+  C:06ADH         LINE#         701
+  C:06B4H         LINE#         702
+  C:06B4H         LINE#         703
+  C:06B8H         LINE#         704
+  C:06B8H         LINE#         705
+  C:06C3H         LINE#         706
+  C:06C8H         LINE#         707
+  C:06CDH         LINE#         708
+  C:06CDH         LINE#         709
+  C:06D5H         LINE#         710
+  C:06D5H         LINE#         711
+  C:06DCH         LINE#         712
+  C:06DCH         LINE#         713
+  C:06E0H         LINE#         714
+  C:06E0H         LINE#         715
+  C:06E7H         LINE#         716
+  C:06E7H         LINE#         717
+  C:06EEH         LINE#         718
+  C:06EEH         LINE#         719
+  C:06F9H         LINE#         720
+  C:06FEH         LINE#         721
+  C:06FEH         LINE#         722
+  C:06FEH         LINE#         724
+  C:070BH         LINE#         725
+  C:070BH         LINE#         726
+  -------         ENDPROC       W5500_INTERRUPT_PROCESS
+  -------         ENDMOD        W5500
+
+  -------         MODULE        ?C?COPY
+  C:0433H         PUBLIC        ?C?COPY
+  -------         ENDMOD        ?C?COPY
+
+  -------         MODULE        ?C?CLDPTR
+  C:0459H         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:0472H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?IILDX
+  C:0484H         PUBLIC        ?C?IILDX
+  -------         ENDMOD        ?C?IILDX
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/10/2014  14:42:19  PAGE 17
+
+
+  -------         MODULE        ?C?ILDIX
+  C:049AH         PUBLIC        ?C?ILDIX
+  -------         ENDMOD        ?C?ILDIX
+
+Program Size: data=9.0 xdata=117 code=2940
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

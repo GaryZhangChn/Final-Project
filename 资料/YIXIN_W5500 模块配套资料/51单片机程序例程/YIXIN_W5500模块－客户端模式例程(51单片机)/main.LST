@@ -1,0 +1,231 @@
+C51 COMPILER V9.02   MAIN                                                                  09/10/2014 14:42:19 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE main.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /***************************************************************************************
+   2           * 描述    ：W5500的端口0工作在客户端模式,主动与《TCP&UDP测试工具》上创建的服务端连接,
+   3           *                       并且定时给服务端发送字符串"\r\nWelcome To YiXinElec!\r\n",同时将接
+   4           *                       收到服务端发来的数据回发给服务端。
+   5           * 实验平台：用户51单片机开发板 + YIXIN_W5500以太网(TCP/IP)模块
+   6           * 硬件连接：  P3^2 -> W5500_RST   
+   7           *             P3^3 -> W5500_INT(本例程没有用到中断,此引脚可以不接)     
+   8           *             P3^6 -> W5500_SCS      
+   9           *             P3^7 -> W5500_SCK    
+  10           *             P3^4 -> W5500_MISO    
+  11           *             P3^5 -> W5500_MOSI    
+  12          
+  13           * 淘宝    ：http://yixindianzikeji.taobao.com/
+  14          ***************************************************************************************/
+  15          
+  16          /*例程网络参数*/
+  17          //网关：192.168.1.1
+  18          //掩码: 255.255.255.0
+  19          //物理地址：0C 29 AB 7C 00 01
+  20          //本机IP地址:192.168.1.199
+  21          //端口0的端口号：5000
+  22          //端口0的目的IP地址：192.168.1.190
+  23          //端口0的目的端口号：6000
+  24          
+  25          #include <reg51.h>
+  26          #include "W5500.h"                              
+  27          #include <string.h>
+  28          
+  29          void Delay(unsigned int d);                     //延时函数(ms)
+  30          
+  31          /*******************************************************************************
+  32          * 函数名  : W5500_Initialization
+  33          * 描述    : W5500初始货配置
+  34          * 输入    : 无
+  35          * 输出    : 无
+  36          * 返回值  : 无
+  37          * 说明    : 无
+  38          *******************************************************************************/
+  39          void W5500_Initialization(void)
+  40          {
+  41   1              W5500_Init();           //初始化W5500寄存器函数
+  42   1              Detect_Gateway();       //检查网关服务器 
+  43   1              Socket_Init(0);         //指定Socket(0~7)初始化,初始化端口0
+  44   1      }
+  45          
+  46          /*******************************************************************************
+  47          * 函数名  : Load_Net_Parameters
+  48          * 描述    : 装载网络参数
+  49          * 输入    : 无
+  50          * 输出    : 无
+  51          * 返回值  : 无
+  52          * 说明    : 网关、掩码、物理地址、本机IP地址、端口号、目的IP地址、目的端口号、端口工作模式
+  53          *******************************************************************************/
+  54          void Load_Net_Parameters(void)
+  55          {
+C51 COMPILER V9.02   MAIN                                                                  09/10/2014 14:42:19 PAGE 2   
+
+  56   1              Gateway_IP[0] = 192;//加载网关参数
+  57   1              Gateway_IP[1] = 168;
+  58   1              Gateway_IP[2] = 1;
+  59   1              Gateway_IP[3] = 1;
+  60   1      
+  61   1              Sub_Mask[0]=255;//加载子网掩码
+  62   1              Sub_Mask[1]=255;
+  63   1              Sub_Mask[2]=255;
+  64   1              Sub_Mask[3]=0;
+  65   1      
+  66   1              Phy_Addr[0]=0x0c;//加载物理地址
+  67   1              Phy_Addr[1]=0x29;
+  68   1              Phy_Addr[2]=0xab;
+  69   1              Phy_Addr[3]=0x7c;
+  70   1              Phy_Addr[4]=0x00;
+  71   1              Phy_Addr[5]=0x01;
+  72   1      
+  73   1              IP_Addr[0]=192;//加载本机IP地址
+  74   1              IP_Addr[1]=168;
+  75   1              IP_Addr[2]=1;
+  76   1              IP_Addr[3]=199;
+  77   1      
+  78   1              S0_Port[0] = 0x13;//加载端口0的端口号5000 
+  79   1              S0_Port[1] = 0x88;
+  80   1      
+  81   1              S0_DIP[0]=192;//加载端口0的目的IP地址
+  82   1              S0_DIP[1]=168;
+  83   1              S0_DIP[2]=1;
+  84   1              S0_DIP[3]=190;
+  85   1              
+  86   1              S0_DPort[0] = 0x17;//加载端口0的目的端口号6000
+  87   1              S0_DPort[1] = 0x70;
+  88   1      
+  89   1              S0_Mode=TCP_CLIENT;//加载端口0的工作模式,TCP客户端模式
+  90   1      }
+  91          
+  92          /*******************************************************************************
+  93          * 函数名  : W5500_Socket_Set
+  94          * 描述    : W5500端口初始化配置
+  95          * 输入    : 无
+  96          * 输出    : 无
+  97          * 返回值  : 无
+  98          * 说明    : 分别设置4个端口,根据端口工作模式,将端口置于TCP服务器、TCP客户端或UDP模式.
+  99          *                       从端口状态字节Socket_State可以判断端口的工作情况
+ 100          *******************************************************************************/
+ 101          void W5500_Socket_Set(void)
+ 102          {
+ 103   1              if(S0_State==0)//端口0初始化配置
+ 104   1              {
+ 105   2                      if(S0_Mode==TCP_SERVER)//TCP服务器模式 
+ 106   2                      {
+ 107   3                              if(Socket_Listen(0)==TRUE)
+ 108   3                                      S0_State=S_INIT;
+ 109   3                              else
+ 110   3                                      S0_State=0;
+ 111   3                      }
+ 112   2                      else if(S0_Mode==TCP_CLIENT)//TCP客户端模式 
+ 113   2                      {
+ 114   3                              if(Socket_Connect(0)==TRUE)
+ 115   3                                      S0_State=S_INIT;
+ 116   3                              else
+ 117   3                                      S0_State=0;
+C51 COMPILER V9.02   MAIN                                                                  09/10/2014 14:42:19 PAGE 3   
+
+ 118   3                      }
+ 119   2                      else//UDP模式 
+ 120   2                      {
+ 121   3                              if(Socket_UDP(0)==TRUE)
+ 122   3                                      S0_State=S_INIT|S_CONN;
+ 123   3                              else
+ 124   3                                      S0_State=0;
+ 125   3                      }
+ 126   2              }
+ 127   1      }
+ 128          
+ 129          /*******************************************************************************
+ 130          * 函数名  : Process_Socket_Data
+ 131          * 描述    : W5500接收并发送接收到的数据
+ 132          * 输入    : s:端口号
+ 133          * 输出    : 无
+ 134          * 返回值  : 无
+ 135          * 说明    : 本过程先调用S_rx_process()从W5500的端口接收数据缓冲区读取数据,
+ 136          *                       然后将读取的数据从Rx_Buffer拷贝到Temp_Buffer缓冲区进行处理。
+ 137          *                       处理完毕，将数据从Temp_Buffer拷贝到Tx_Buffer缓冲区。调用S_tx_process()
+ 138          *                       发送数据。
+ 139          *******************************************************************************/
+ 140          void Process_Socket_Data(SOCKET s)
+ 141          {
+ 142   1              unsigned short size;
+ 143   1              size=Read_SOCK_Data_Buffer(s, Rx_Buffer);
+ 144   1              memcpy(Tx_Buffer, Rx_Buffer, size);                     
+ 145   1              Write_SOCK_Data_Buffer(s, Tx_Buffer, size);
+ 146   1      }
+ 147          
+ 148          /*******************************************************************************
+ 149          * 函数名  : main
+ 150          * 描述    : 主函数，用户程序从main函数开始运行
+ 151          * 输入    : 无
+ 152          * 输出    : 无
+ 153          * 返回值  : int:返回值为一个16位整形数
+ 154          * 说明    : 无
+ 155          *******************************************************************************/
+ 156          int main(void)
+ 157          {
+ 158   1              unsigned int W5500_Send_Delay_Counter =0;
+ 159   1      
+ 160   1              Load_Net_Parameters();          //装载网络参数  
+ 161   1              W5500_Hardware_Reset();         //硬件复位W5500
+ 162   1              W5500_Initialization();         //W5500初始货配置
+ 163   1              while (1)
+ 164   1              {
+ 165   2                      W5500_Socket_Set();//W5500端口初始化配置
+ 166   2                      
+ 167   2                      W5500_Interrupt_Process();//W5500中断处理程序框架
+ 168   2      
+ 169   2                      if((S0_Data & S_RECEIVE) == S_RECEIVE)//如果Socket0接收到数据
+ 170   2                      {
+ 171   3                              S0_Data&=~S_RECEIVE;
+ 172   3                              Process_Socket_Data(0);//W5500接收并发送接收到的数据
+ 173   3                      }
+ 174   2                      else if(W5500_Send_Delay_Counter >= 3000)//定时发送字符串
+ 175   2                      {
+ 176   3                              if(S0_State == (S_INIT|S_CONN))
+ 177   3                              {
+ 178   4                                      S0_Data&=~S_TRANSMITOK;
+ 179   4                                      memcpy(Tx_Buffer, "\r\nWelcome To YiXinElec!\r\n", 23); 
+C51 COMPILER V9.02   MAIN                                                                  09/10/2014 14:42:19 PAGE 4   
+
+ 180   4                                      Write_SOCK_Data_Buffer(0, Tx_Buffer, 23);//指定Socket(0~7)发送数据处理,端口0发送23字节数据
+ 181   4                              }
+ 182   3                              W5500_Send_Delay_Counter=0;
+ 183   3                      }
+ 184   2                      W5500_Send_Delay_Counter++;
+ 185   2              }
+ 186   1      }
+ 187          
+ 188          /*******************************************************************************
+ 189          * 函数名  : Delay
+ 190          * 描述    : 延时函数(ms)
+ 191          * 输入    : d:延时系数，单位为毫秒
+ 192          * 输出    : 无
+ 193          * 返回    : 无 
+ 194          * 说明    : 延时是利用Timer2定时器产生的1毫秒的计数来实现的
+ 195          *******************************************************************************/
+ 196          void Delay(unsigned int  x)
+ 197          {
+ 198   1          unsigned int i,j;
+ 199   1      
+ 200   1          for(j=0;j<5;j++)
+ 201   1                      for(i=0;i<x;i++);
+ 202   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    431    ----
+   CONSTANT SIZE    =     26    ----
+   XDATA SIZE       =   ----       5
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

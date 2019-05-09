@@ -1,0 +1,162 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.7</VERSION>
+ <DEVICE>"ATmega8515"</DEVICE>
+ <WORKING_DIR>H:\final project\embedded system\3.1\1.0\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\ATmega_DFP\1.2.209\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>H:\final project\embedded system\3.1\1.0\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\ATmega_DFP\1.2.209\avrasm\inc\m8515def.inc</FILE>
+  <FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE>
+  <FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE>
+  <FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE>
+  <FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>H:\final project\embedded system\3.1\1.0\Debug\1.0.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>1.0.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>1.0.map</FILE>
+  <FILE>1.0.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <buff><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>20</LINE></buff>
+  <reset><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>23</LINE></reset>
+  <init><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>30</LINE></init>
+  <isr0><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>150</LINE></isr0>
+  <init_uart><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>32</LINE></init_uart>
+  <init_0><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>38</LINE></init_0>
+  <init_lcd><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>13</LINE></init_lcd>
+  <monit_mode><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>58</LINE></monit_mode>
+  <config_mode><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>113</LINE></config_mode>
+  <clear_lcd><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>40</LINE></clear_lcd>
+  <DELAY1520uS><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>21</LINE></DELAY1520uS>
+  <dis_svsr><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>108</LINE></dis_svsr>
+  <monit_loop><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>67</LINE></monit_loop>
+  <dis_second_line><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>55</LINE></dis_second_line>
+  <alt><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>102</LINE></alt>
+  <print_part_1><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>220</LINE></print_part_1>
+  <adc_get_data1><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>266</LINE></adc_get_data1>
+  <hex2asc><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>23</LINE></hex2asc>
+  <putchar><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>80</LINE></putchar>
+  <print_part_2><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>227</LINE></print_part_2>
+  <adc_get_data2><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>284</LINE></adc_get_data2>
+  <print_part_3><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>234</LINE></print_part_3>
+  <DELAY1S><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>45</LINE></DELAY1S>
+  <dis_alert1><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>124</LINE></dis_alert1>
+  <dis_loop><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>65</LINE></dis_loop>
+  <refresh><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>109</LINE></refresh>
+  <lcd_alt><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>245</LINE></lcd_alt>
+  <banner_terminal><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>114</LINE></banner_terminal>
+  <banner_lcd><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>83</LINE></banner_lcd>
+  <checksum><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>170</LINE></checksum>
+  <dis_node><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>116</LINE></dis_node>
+  <default><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>127</LINE></default>
+  <terminal_data><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>178</LINE></terminal_data>
+  <background><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>132</LINE></background>
+  <terminal_config><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>144</LINE></terminal_config>
+  <checkdata1><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>197</LINE></checkdata1>
+  <checkdata2><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>216</LINE></checkdata2>
+  <fini><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>141</LINE></fini>
+  <terminal_menu_conf><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>123</LINE></terminal_menu_conf>
+  <terminal_get_conf><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>160</LINE></terminal_get_conf>
+  <check_input_conf><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>241</LINE></check_input_conf>
+  <calc_int_time><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>155</LINE></calc_int_time>
+  <one_hundred><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>159</LINE></one_hundred>
+  <cnt_reset><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>164</LINE></cnt_reset>
+  <ten_thousands><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>166</LINE></ten_thousands>
+  <esum><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>332</LINE></esum>
+  <checksum_calc><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>178</LINE></checksum_calc>
+  <dis_checksum><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>101</LINE></dis_checksum>
+  <ascii_on_lcd><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>306</LINE></ascii_on_lcd>
+  <ascii_on_terminal><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>316</LINE></ascii_on_terminal>
+  <dis_data1><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>146</LINE></dis_data1>
+  <percentage_humidity><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>88</LINE></percentage_humidity>
+  <hex2bcd8><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>52</LINE></hex2bcd8>
+  <dis_value><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>237</LINE></dis_value>
+  <dis_char><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>74</LINE></dis_char>
+  <clear_second_line><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>46</LINE></clear_second_line>
+  <dis_HL><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>160</LINE></dis_HL>
+  <dis_data2><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>153</LINE></dis_data2>
+  <dis_alert2><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>131</LINE></dis_alert2>
+  <dis_alert3><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>138</LINE></dis_alert3>
+  <data_loop1><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>271</LINE></data_loop1>
+  <cnt_high1><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>280</LINE></cnt_high1>
+  <data_loop1_end><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>276</LINE></data_loop1_end>
+  <data_loop2><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>289</LINE></data_loop2>
+  <cnt_high2><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>298</LINE></cnt_high2>
+  <data_loop2_end><FILE>H:\final project\embedded system\3.1\1.0\main.asm</FILE><LINE>294</LINE></data_loop2_end>
+  <gets><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>46</LINE></gets>
+  <gtx><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>48</LINE></gtx>
+  <getche><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>71</LINE></getche>
+  <gty><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>55</LINE></gty>
+  <getch><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>62</LINE></getch>
+  <putc1><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>82</LINE></putc1>
+  <puts><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>90</LINE></puts>
+  <px><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>96</LINE></px>
+  <newl><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>100</LINE></newl>
+  <banr><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>120</LINE></banr>
+  <node_menu><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>129</LINE></node_menu>
+  <unknown><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>139</LINE></unknown>
+  <idk><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>145</LINE></idk>
+  <terminal_get_monit><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>147</LINE></terminal_get_monit>
+  <term_svsr><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>158</LINE></term_svsr>
+  <term_node><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>174</LINE></term_node>
+  <data1><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>151</LINE></data1>
+  <data2><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>158</LINE></data2>
+  <data_print1><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>225</LINE></data_print1>
+  <data_print2><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>232</LINE></data_print2>
+  <data_print3><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>239</LINE></data_print3>
+  <acquire_temperature><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>251</LINE></acquire_temperature>
+  <acquire_humidity><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>285</LINE></acquire_humidity>
+  <set_trim><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>309</LINE></set_trim>
+  <terminal_HL><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>266</LINE></terminal_HL>
+  <highval><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>164</LINE></highval>
+  <lowval><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>173</LINE></lowval>
+  <display_stats><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>299</LINE></display_stats>
+  <trim_level><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>316</LINE></trim_level>
+  <trim_level_end><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>338</LINE></trim_level_end>
+  <asc2hex><FILE>H:\final project\embedded system\3.1\1.0\termio.inc</FILE><LINE>341</LINE></asc2hex>
+  <h2a><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>30</LINE></h2a>
+  <h2b><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>38</LINE></h2b>
+  <msd><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>55</LINE></msd>
+  <lsd><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>60</LINE></lsd>
+  <percentage_trim><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>67</LINE></percentage_trim>
+  <pct0><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>114</LINE></pct0>
+  <pct10><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>117</LINE></pct10>
+  <pct20><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>120</LINE></pct20>
+  <pct30><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>123</LINE></pct30>
+  <pct40><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>126</LINE></pct40>
+  <pct50><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>129</LINE></pct50>
+  <pct60><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>132</LINE></pct60>
+  <pct70><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>135</LINE></pct70>
+  <pct80><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>138</LINE></pct80>
+  <pct100><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>144</LINE></pct100>
+  <pct90><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>141</LINE></pct90>
+  <table_end><FILE>H:\final project\embedded system\3.1\1.0\numio.inc</FILE><LINE>111</LINE></table_end>
+  <DELAY40mS><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>29</LINE></DELAY40mS>
+  <DELAY4clk><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>15</LINE></DELAY4clk>
+  <blank><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>51</LINE></blank>
+  <dis_loop_end><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>71</LINE></dis_loop_end>
+  <dis_lcd_banr><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>95</LINE></dis_lcd_banr>
+  <lcd_banr><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>99</LINE></lcd_banr>
+  <dis_cks><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>106</LINE></dis_cks>
+  <lcd_svsr><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>114</LINE></lcd_svsr>
+  <lcd_node><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>122</LINE></lcd_node>
+  <alert1><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>129</LINE></alert1>
+  <alert2><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>136</LINE></alert2>
+  <alert3><FILE>H:\final project\embedded system\3.1\1.0\lcdio_project.inc</FILE><LINE>143</LINE></alert3>
+  <delay_loop1><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>24</LINE></delay_loop1>
+  <delay_loop2><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>32</LINE></delay_loop2>
+  <DELAY5mS><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>37</LINE></DELAY5mS>
+  <delay_loop3><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>40</LINE></delay_loop3>
+  <delay_loop4_1><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>48</LINE></delay_loop4_1>
+  <delay_loop4_2><FILE>H:\final project\embedded system\3.1\1.0\delay_project.inc</FILE><LINE>52</LINE></delay_loop4_2>
+ </LABELS>
+</ASSEMBLER_INFO>

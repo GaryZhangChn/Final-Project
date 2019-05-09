@@ -1,0 +1,4 @@
+"main.obj",
+"W5500.obj" 
+TO "Project" 
+RAMSIZE(256) 

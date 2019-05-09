@@ -1,0 +1,768 @@
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE W5500
+OBJECT MODULE PLACED IN W5500.OBJ
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE W5500.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /**********************************************************************************
+   2           * 文件名  ：W5500.c
+   3           * 描述    ：W5500 驱动函数库         
+   4          
+   5           * 淘宝    ：http://yixindianzikeji.taobao.com/
+   6          **********************************************************************************/
+   7                          
+   8          #include "W5500.h"      
+   9          
+  10          /***************----- 网络参数变量定义 -----***************/
+  11          unsigned char Gateway_IP[4];//网关IP地址 
+  12          unsigned char Sub_Mask[4];      //子网掩码 
+  13          unsigned char Phy_Addr[6];      //物理地址(MAC) 
+  14          unsigned char IP_Addr[4];       //本机IP地址 
+  15          
+  16          unsigned char S0_Port[2];       //端口0的端口号
+  17          unsigned char S0_DIP[4];        //端口0目的IP地址 
+  18          unsigned char S0_DPort[2];      //端口0目的端口号
+  19          
+  20          unsigned char UDP_DIPR[4];      //UDP(广播)模式,目的主机IP地址
+  21          unsigned char UDP_DPORT[2];     //UDP(广播)模式,目的主机端口号
+  22          
+  23          /***************----- 端口的运行模式 -----***************/
+  24          unsigned char S0_Mode =3;       //端口0的运行模式,0:TCP服务器模式,1:TCP客户端模式,2:UDP(广播)模式
+  25          
+  26          #define TCP_SERVER      0x00    //TCP服务器模式
+  27          #define TCP_CLIENT      0x01    //TCP客户端模式 
+  28          #define UDP_MODE        0x02    //UDP(广播)模式 
+  29          
+  30          /***************----- 端口的运行状态 -----***************/
+  31          unsigned char S0_State =0;      //端口0状态记录,1:端口完成初始化,2端口完成连接(可以正常传输数据) 
+  32          #define S_INIT          0x01    //端口完成初始化 
+  33          #define S_CONN          0x02    //端口完成连接,可以正常传输数据 
+  34          
+  35          /***************----- 端口收发数据的状态 -----***************/
+  36          unsigned char S0_Data;          //端口0接收和发送数据的状态,1:端口接收到数据,2:端口发送数据完成 
+  37          #define S_RECEIVE        0x01   //端口接收到一个数据包 
+  38          #define S_TRANSMITOK 0x02       //端口发送一个数据包完成 
+  39          
+  40          /***************----- 端口数据缓冲区 -----***************/
+  41          unsigned char Rx_Buffer[30];    //端口接收数据缓冲区 
+  42          unsigned char Tx_Buffer[30];    //端口发送数据缓冲区 
+  43          
+  44          unsigned char W5500_Interrupt;  //W5500中断标志(0:无中断,1:有中断)
+  45          
+  46          /*******************************************************************************
+  47          * 函数名  : SPI_ReadByte
+  48          * 描述    : 读取一个字节SPI返回的数据
+  49          * 输入    : 无
+  50          * 输出    : 无
+  51          * 返回值  : 读取到的寄存器数据
+  52          * 说明    : 无
+  53          *******************************************************************************/
+  54          unsigned char SPI_Read_Byte(void)
+  55          {
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 2   
+
+  56   1              unsigned char i,rByte=0;
+  57   1              
+  58   1              W5500_SCLK=0;
+  59   1              for(i=0;i<8;i++)
+  60   1              {
+  61   2                      W5500_SCLK=1;
+  62   2                      rByte<<=1;
+  63   2                      rByte|=W5500_MISO;
+  64   2                      W5500_SCLK=0;   
+  65   2              }
+  66   1              return rByte;
+  67   1      }
+  68          
+  69          /*******************************************************************************
+  70          * 函数名  : SPI_SendByte
+  71          * 描述    : SPI发送一个字节数据
+  72          * 输入    : dt:待发送的数据
+  73          * 输出    : 无
+  74          * 返回值  : 无
+  75          * 说明    : 无
+  76          *******************************************************************************/
+  77          void SPI_Send_Byte(unsigned char dt)
+  78          {
+  79   1              unsigned char i;
+  80   1                      
+  81   1              for(i=0;i<8;i++)
+  82   1              {       
+  83   2                      W5500_SCLK=0;
+  84   2                      if((dt<<i)&0x80)
+  85   2                              W5500_MOSI=1;
+  86   2                      else
+  87   2                              W5500_MOSI=0;                                   
+  88   2                      W5500_SCLK=1;
+  89   2              }
+  90   1              W5500_SCLK=0;
+  91   1      }
+  92          
+  93          /*******************************************************************************
+  94          * 函数名  : SPI_Send_Short
+  95          * 描述    : SPI发送2个字节数据(16位)
+  96          * 输入    : dat:待发送的16位数据
+  97          * 输出    : 无
+  98          * 返回值  : 无
+  99          * 说明    : 无
+ 100          *******************************************************************************/
+ 101          void SPI_Send_Short(unsigned short dt)
+ 102          {
+ 103   1              SPI_Send_Byte((unsigned char)(dt/256)); //写数据高位
+ 104   1              SPI_Send_Byte(dt);                                              //写数据低位
+ 105   1      }
+ 106          
+ 107          /*******************************************************************************
+ 108          * 函数名  : Write_W5500_1Byte
+ 109          * 描述    : 通过SPI向指定地址寄存器写1个字节数据
+ 110          * 输入    : reg:16位寄存器地址,dat:待写入的数据
+ 111          * 输出    : 无
+ 112          * 返回值  : 无
+ 113          * 说明    : 无
+ 114          *******************************************************************************/
+ 115          void Write_W5500_1Byte(unsigned short reg, unsigned char dat)
+ 116          {
+ 117   1              W5500_SCS=0;//置W5500的SCS为低电平
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 3   
+
+ 118   1      
+ 119   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 120   1              SPI_Send_Byte(FDM1|RWB_WRITE|COMMON_R);//通过SPI写控制字节,1个字节数据长度,写数据,选择通用寄存器
+ 121   1              SPI_Send_Byte(dat);//写1个字节数据
+ 122   1      
+ 123   1              W5500_SCS=1; //置W5500的SCS为高电平
+ 124   1      }
+ 125          
+ 126          /*******************************************************************************
+ 127          * 函数名  : Write_W5500_2Byte
+ 128          * 描述    : 通过SPI向指定地址寄存器写2个字节数据
+ 129          * 输入    : reg:16位寄存器地址,dat:16位待写入的数据(2个字节)
+ 130          * 输出    : 无
+ 131          * 返回值  : 无
+ 132          * 说明    : 无
+ 133          *******************************************************************************/
+ 134          void Write_W5500_2Byte(unsigned short reg, unsigned short dat)
+ 135          {
+ 136   1              W5500_SCS=0;//置W5500的SCS为低电平
+ 137   1                      
+ 138   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 139   1              SPI_Send_Byte(FDM2|RWB_WRITE|COMMON_R);//通过SPI写控制字节,2个字节数据长度,写数据,选择通用寄存器
+ 140   1              SPI_Send_Short(dat);//写16位数据
+ 141   1      
+ 142   1              W5500_SCS=1; //置W5500的SCS为高电平
+ 143   1      }
+ 144          
+ 145          /*******************************************************************************
+ 146          * 函数名  : Write_W5500_nByte
+ 147          * 描述    : 通过SPI向指定地址寄存器写n个字节数据
+ 148          * 输入    : reg:16位寄存器地址,*dat_ptr:待写入数据缓冲区指针,size:待写入的数据长度
+ 149          * 输出    : 无
+ 150          * 返回值  : 无
+ 151          * 说明    : 无
+ 152          *******************************************************************************/
+ 153          void Write_W5500_nByte(unsigned short reg, unsigned char *dat_ptr, unsigned short size)
+ 154          {
+ 155   1              unsigned short i;
+ 156   1      
+ 157   1              W5500_SCS=0;//置W5500的SCS为低电平      
+ 158   1                      
+ 159   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 160   1              SPI_Send_Byte(VDM|RWB_WRITE|COMMON_R);//通过SPI写控制字节,N个字节数据长度,写数据,选择通用寄存器
+ 161   1      
+ 162   1              for(i=0;i<size;i++)//循环将缓冲区的size个字节数据写入W5500
+ 163   1              {
+ 164   2                      SPI_Send_Byte(*dat_ptr++);//写一个字节数据
+ 165   2              }
+ 166   1      
+ 167   1              W5500_SCS=1; //置W5500的SCS为高电平
+ 168   1      }
+ 169          
+ 170          /*******************************************************************************
+ 171          * 函数名  : Write_W5500_SOCK_1Byte
+ 172          * 描述    : 通过SPI向指定端口寄存器写1个字节数据
+ 173          * 输入    : s:端口号,reg:16位寄存器地址,dat:待写入的数据
+ 174          * 输出    : 无
+ 175          * 返回值  : 无
+ 176          * 说明    : 无
+ 177          *******************************************************************************/
+ 178          void Write_W5500_SOCK_1Byte(SOCKET s, unsigned short reg, unsigned char dat)
+ 179          {
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 4   
+
+ 180   1              W5500_SCS=0;//置W5500的SCS为低电平      
+ 181   1                      
+ 182   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 183   1              SPI_Send_Byte(FDM1|RWB_WRITE|(s*0x20+0x08));//通过SPI写控制字节,1个字节数据长度,写数据,选择端口s的寄存器
+ 184   1              SPI_Send_Byte(dat);//写1个字节数据
+ 185   1      
+ 186   1              W5500_SCS=1; //置W5500的SCS为高电平
+ 187   1      }
+ 188          
+ 189          /*******************************************************************************
+ 190          * 函数名  : Write_W5500_SOCK_2Byte
+ 191          * 描述    : 通过SPI向指定端口寄存器写2个字节数据
+ 192          * 输入    : s:端口号,reg:16位寄存器地址,dat:16位待写入的数据(2个字节)
+ 193          * 输出    : 无
+ 194          * 返回值  : 无
+ 195          * 说明    : 无
+ 196          *******************************************************************************/
+ 197          void Write_W5500_SOCK_2Byte(SOCKET s, unsigned short reg, unsigned short dat)
+ 198          {
+ 199   1              W5500_SCS=0;//置W5500的SCS为低电平
+ 200   1                              
+ 201   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 202   1              SPI_Send_Byte(FDM2|RWB_WRITE|(s*0x20+0x08));//通过SPI写控制字节,2个字节数据长度,写数据,选择端口s的寄存器
+ 203   1              SPI_Send_Short(dat);//写16位数据
+ 204   1      
+ 205   1              W5500_SCS=1; //置W5500的SCS为高电平
+ 206   1      }
+ 207          
+ 208          /*******************************************************************************
+ 209          * 函数名  : Write_W5500_SOCK_4Byte
+ 210          * 描述    : 通过SPI向指定端口寄存器写4个字节数据
+ 211          * 输入    : s:端口号,reg:16位寄存器地址,*dat_ptr:待写入的4个字节缓冲区指针
+ 212          * 输出    : 无
+ 213          * 返回值  : 无
+ 214          * 说明    : 无
+ 215          *******************************************************************************/
+ 216          void Write_W5500_SOCK_4Byte(SOCKET s, unsigned short reg, unsigned char *dat_ptr)
+ 217          {
+ 218   1              W5500_SCS=0;//置W5500的SCS为低电平
+ 219   1                              
+ 220   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 221   1              SPI_Send_Byte(FDM4|RWB_WRITE|(s*0x20+0x08));//通过SPI写控制字节,4个字节数据长度,写数据,选择端口s的寄存器
+ 222   1      
+ 223   1              SPI_Send_Byte(*dat_ptr++);//写第1个字节数据
+ 224   1              SPI_Send_Byte(*dat_ptr++);//写第2个字节数据
+ 225   1              SPI_Send_Byte(*dat_ptr++);//写第3个字节数据
+ 226   1              SPI_Send_Byte(*dat_ptr++);//写第4个字节数据
+ 227   1      
+ 228   1              W5500_SCS=1; //置W5500的SCS为高电平
+ 229   1      }
+ 230          
+ 231          /*******************************************************************************
+ 232          * 函数名  : Read_W5500_1Byte
+ 233          * 描述    : 读W5500指定地址寄存器的1个字节数据
+ 234          * 输入    : reg:16位寄存器地址
+ 235          * 输出    : 无
+ 236          * 返回值  : 读取到寄存器的1个字节数据
+ 237          * 说明    : 无
+ 238          *******************************************************************************/
+ 239          unsigned char Read_W5500_1Byte(unsigned short reg)
+ 240          {
+ 241   1              unsigned char i;
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 5   
+
+ 242   1      
+ 243   1              W5500_SCS=0;//置W5500的SCS为低电平
+ 244   1                              
+ 245   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 246   1              SPI_Send_Byte(FDM1|RWB_READ|COMMON_R);//通过SPI写控制字节,1个字节数据长度,读数据,选择通用寄存器
+ 247   1              i=SPI_Read_Byte();
+ 248   1      
+ 249   1              W5500_SCS=1;//置W5500的SCS为高电平
+ 250   1              return i;//返回读取到的寄存器数据
+ 251   1      }
+ 252          
+ 253          /*******************************************************************************
+ 254          * 函数名  : Read_W5500_SOCK_1Byte
+ 255          * 描述    : 读W5500指定端口寄存器的1个字节数据
+ 256          * 输入    : s:端口号,reg:16位寄存器地址
+ 257          * 输出    : 无
+ 258          * 返回值  : 读取到寄存器的1个字节数据
+ 259          * 说明    : 无
+ 260          *******************************************************************************/
+ 261          unsigned char Read_W5500_SOCK_1Byte(SOCKET s, unsigned short reg)
+ 262          {
+ 263   1              unsigned char i;
+ 264   1      
+ 265   1              W5500_SCS=0;//置W5500的SCS为低电平
+ 266   1                              
+ 267   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 268   1              SPI_Send_Byte(FDM1|RWB_READ|(s*0x20+0x08));//通过SPI写控制字节,1个字节数据长度,读数据,选择端口s的寄存器
+ 269   1              i=SPI_Read_Byte();
+ 270   1      
+ 271   1              W5500_SCS=1;//置W5500的SCS为高电平
+ 272   1              return i;//返回读取到的寄存器数据
+ 273   1      }
+ 274          
+ 275          /*******************************************************************************
+ 276          * 函数名  : Read_W5500_SOCK_2Byte
+ 277          * 描述    : 读W5500指定端口寄存器的2个字节数据
+ 278          * 输入    : s:端口号,reg:16位寄存器地址
+ 279          * 输出    : 无
+ 280          * 返回值  : 读取到寄存器的2个字节数据(16位)
+ 281          * 说明    : 无
+ 282          *******************************************************************************/
+ 283          unsigned short Read_W5500_SOCK_2Byte(SOCKET s, unsigned short reg)
+ 284          {
+ 285   1              unsigned short i;
+ 286   1      
+ 287   1              W5500_SCS=0;//置W5500的SCS为低电平
+ 288   1                              
+ 289   1              SPI_Send_Short(reg);//通过SPI写16位寄存器地址
+ 290   1              SPI_Send_Byte(FDM2|RWB_READ|(s*0x20+0x08));//通过SPI写控制字节,2个字节数据长度,读数据,选择端口s的寄存器
+ 291   1      
+ 292   1              i=SPI_Read_Byte();
+ 293   1              i*=256;
+ 294   1              i+=SPI_Read_Byte();//读取低位数据
+ 295   1      
+ 296   1              W5500_SCS=1;//置W5500的SCS为高电平
+ 297   1              return i;//返回读取到的寄存器数据
+ 298   1      }
+ 299          
+ 300          /*******************************************************************************
+ 301          * 函数名  : Read_SOCK_Data_Buffer
+ 302          * 描述    : 从W5500接收数据缓冲区中读取数据
+ 303          * 输入    : s:端口号,*dat_ptr:数据保存缓冲区指针
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 6   
+
+ 304          * 输出    : 无
+ 305          * 返回值  : 读取到的数据长度,rx_size个字节
+ 306          * 说明    : 无
+ 307          *******************************************************************************/
+ 308          unsigned short Read_SOCK_Data_Buffer(SOCKET s, unsigned char *dat_ptr)
+ 309          {
+ 310   1              unsigned short rx_size;
+ 311   1              unsigned short offset, offset1;
+ 312   1              unsigned short i;
+ 313   1              unsigned char j;
+ 314   1      
+ 315   1              rx_size=Read_W5500_SOCK_2Byte(s,Sn_RX_RSR);
+ 316   1              if(rx_size==0) return 0;//没接收到数据则返回
+ 317   1              if(rx_size>1460) rx_size=1460;
+ 318   1      
+ 319   1              offset=Read_W5500_SOCK_2Byte(s,Sn_RX_RD);
+ 320   1              offset1=offset;
+ 321   1              offset&=(S_RX_SIZE-1);//计算实际的物理地址
+ 322   1      
+ 323   1              W5500_SCS=0;//置W5500的SCS为低电平
+ 324   1      
+ 325   1              SPI_Send_Short(offset);//写16位地址
+ 326   1              SPI_Send_Byte(VDM|RWB_READ|(s*0x20+0x18));//写控制字节,N个字节数据长度,读数据,选择端口s的寄存器
+ 327   1              
+ 328   1              if((offset+rx_size)<S_RX_SIZE)//如果最大地址未超过W5500接收缓冲区寄存器的最大地址
+ 329   1              {
+ 330   2                      for(i=0;i<rx_size;i++)//循环读取rx_size个字节数据
+ 331   2                      {
+ 332   3                              j=SPI_Read_Byte();//读取1个字节数据
+ 333   3                              *dat_ptr=j;//将读取到的数据保存到数据保存缓冲区
+ 334   3                              dat_ptr++;//数据保存缓冲区指针地址自增1
+ 335   3                      }
+ 336   2              }
+ 337   1              else//如果最大地址超过W5500接收缓冲区寄存器的最大地址
+ 338   1              {
+ 339   2                      offset=S_RX_SIZE-offset;
+ 340   2                      for(i=0;i<offset;i++)//循环读取出前offset个字节数据
+ 341   2                      {
+ 342   3                              j=SPI_Read_Byte();//读取1个字节数据
+ 343   3                              *dat_ptr=j;//将读取到的数据保存到数据保存缓冲区
+ 344   3                              dat_ptr++;//数据保存缓冲区指针地址自增1
+ 345   3                      }
+ 346   2                      W5500_SCS=1; //置W5500的SCS为高电平
+ 347   2      
+ 348   2                      W5500_SCS=0;//置W5500的SCS为低电平
+ 349   2      
+ 350   2                      SPI_Send_Short(0x00);//写16位地址
+ 351   2                      SPI_Send_Byte(VDM|RWB_READ|(s*0x20+0x18));//写控制字节,N个字节数据长度,读数据,选择端口s的寄存器
+ 352   2      
+ 353   2                      for(;i<rx_size;i++)//循环读取后rx_size-offset个字节数据
+ 354   2                      {
+ 355   3                              j=SPI_Read_Byte();//读取1个字节数据
+ 356   3                              *dat_ptr=j;//将读取到的数据保存到数据保存缓冲区
+ 357   3                              dat_ptr++;//数据保存缓冲区指针地址自增1
+ 358   3                      }
+ 359   2              }
+ 360   1              W5500_SCS=1; //置W5500的SCS为高电平
+ 361   1      
+ 362   1              offset1+=rx_size;//更新实际物理地址,即下次读取接收到的数据的起始地址
+ 363   1              Write_W5500_SOCK_2Byte(s, Sn_RX_RD, offset1);
+ 364   1              Write_W5500_SOCK_1Byte(s, Sn_CR, RECV);//发送启动接收命令
+ 365   1              return rx_size;//返回接收到数据的长度
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 7   
+
+ 366   1      }
+ 367          
+ 368          /*******************************************************************************
+ 369          * 函数名  : Write_SOCK_Data_Buffer
+ 370          * 描述    : 将数据写入W5500的数据发送缓冲区
+ 371          * 输入    : s:端口号,*dat_ptr:数据保存缓冲区指针,size:待写入数据的长度
+ 372          * 输出    : 无
+ 373          * 返回值  : 无
+ 374          * 说明    : 无
+ 375          *******************************************************************************/
+ 376          void Write_SOCK_Data_Buffer(SOCKET s, unsigned char *dat_ptr, unsigned short size)
+ 377          {
+ 378   1              unsigned short offset,offset1;
+ 379   1              unsigned short i;
+ 380   1      
+ 381   1              //如果是UDP模式,可以在此设置目的主机的IP和端口号
+ 382   1              if((Read_W5500_SOCK_1Byte(s,Sn_MR)&0x0f) != SOCK_UDP)//如果Socket打开失败
+ 383   1              {               
+ 384   2                      Write_W5500_SOCK_4Byte(s, Sn_DIPR, UDP_DIPR);//设置目的主机IP           
+ 385   2                      Write_W5500_SOCK_2Byte(s, Sn_DPORTR, UDP_DPORT[0]*256+UDP_DPORT[1]);//设置目的主机端口号                                
+ 386   2              }
+ 387   1      
+ 388   1              offset=Read_W5500_SOCK_2Byte(s,Sn_TX_WR);
+ 389   1              offset1=offset;
+ 390   1              offset&=(S_TX_SIZE-1);//计算实际的物理地址
+ 391   1      
+ 392   1              W5500_SCS=0;//置W5500的SCS为低电平
+ 393   1      
+ 394   1              SPI_Send_Short(offset);//写16位地址
+ 395   1              SPI_Send_Byte(VDM|RWB_WRITE|(s*0x20+0x10));//写控制字节,N个字节数据长度,写数据,选择端口s的寄存器
+ 396   1      
+ 397   1              if((offset+size)<S_TX_SIZE)//如果最大地址未超过W5500发送缓冲区寄存器的最大地址
+ 398   1              {
+ 399   2                      for(i=0;i<size;i++)//循环写入size个字节数据
+ 400   2                      {
+ 401   3                              SPI_Send_Byte(*dat_ptr++);//写入一个字节的数据          
+ 402   3                      }
+ 403   2              }
+ 404   1              else//如果最大地址超过W5500发送缓冲区寄存器的最大地址
+ 405   1              {
+ 406   2                      offset=S_TX_SIZE-offset;
+ 407   2                      for(i=0;i<offset;i++)//循环写入前offset个字节数据
+ 408   2                      {
+ 409   3                              SPI_Send_Byte(*dat_ptr++);//写入一个字节的数据
+ 410   3                      }
+ 411   2                      W5500_SCS=1; //置W5500的SCS为高电平
+ 412   2      
+ 413   2                      W5500_SCS=0;//置W5500的SCS为低电平
+ 414   2      
+ 415   2                      SPI_Send_Short(0x00);//写16位地址
+ 416   2                      SPI_Send_Byte(VDM|RWB_WRITE|(s*0x20+0x10));//写控制字节,N个字节数据长度,写数据,选择端口s的寄存器
+ 417   2      
+ 418   2                      for(;i<size;i++)//循环写入size-offset个字节数据
+ 419   2                      {
+ 420   3                              SPI_Send_Byte(*dat_ptr++);//写入一个字节的数据
+ 421   3                      }
+ 422   2              }
+ 423   1              W5500_SCS=1; //置W5500的SCS为高电平
+ 424   1      
+ 425   1              offset1+=size;//更新实际物理地址,即下次写待发送数据到发送数据缓冲区的起始地址
+ 426   1              Write_W5500_SOCK_2Byte(s, Sn_TX_WR, offset1);
+ 427   1              Write_W5500_SOCK_1Byte(s, Sn_CR, SEND);//发送启动发送命令                               
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 8   
+
+ 428   1      }
+ 429          
+ 430          /*******************************************************************************
+ 431          * 函数名  : W5500_Hardware_Reset
+ 432          * 描述    : 硬件复位W5500
+ 433          * 输入    : 无
+ 434          * 输出    : 无
+ 435          * 返回值  : 无
+ 436          * 说明    : W5500的复位引脚保持低电平至少500us以上,才能重围W5500
+ 437          *******************************************************************************/
+ 438          void W5500_Hardware_Reset(void)
+ 439          {
+ 440   1              W5500_RST=0;//复位引脚拉低
+ 441   1              Delay(200);
+ 442   1              W5500_RST=1;//复位引脚拉高
+ 443   1              Delay(200);
+ 444   1              while((Read_W5500_1Byte(PHYCFGR)&LINK)==0);//等待以太网连接完成
+ 445   1      }
+ 446          
+ 447          /*******************************************************************************
+ 448          * 函数名  : W5500_Init
+ 449          * 描述    : 初始化W5500寄存器函数
+ 450          * 输入    : 无
+ 451          * 输出    : 无
+ 452          * 返回值  : 无
+ 453          * 说明    : 在使用W5500之前，先对W5500初始化
+ 454          *******************************************************************************/
+ 455          void W5500_Init(void)
+ 456          {
+ 457   1              unsigned char i=0;
+ 458   1      
+ 459   1              Write_W5500_1Byte(MR, RST);//软件复位W5500,置1有效,复位后自动清0
+ 460   1              Delay(10);//延时10ms,自己定义该函数
+ 461   1      
+ 462   1              //设置网关(Gateway)的IP地址,Gateway_IP为4字节unsigned char数组,自己定义 
+ 463   1              //使用网关可以使通信突破子网的局限，通过网关可以访问到其它子网或进入Internet
+ 464   1              Write_W5500_nByte(GAR, Gateway_IP, 4);
+ 465   1                              
+ 466   1              //设置子网掩码(MASK)值,SUB_MASK为4字节unsigned char数组,自己定义
+ 467   1              //子网掩码用于子网运算
+ 468   1              Write_W5500_nByte(SUBR,Sub_Mask,4);             
+ 469   1              
+ 470   1              //设置物理地址,PHY_ADDR为6字节unsigned char数组,自己定义,用于唯一标识网络设备的物理地址值
+ 471   1              //该地址值需要到IEEE申请，按照OUI的规定，前3个字节为厂商代码，后三个字节为产品序号
+ 472   1              //如果自己定义物理地址，注意第一个字节必须为偶数
+ 473   1              Write_W5500_nByte(SHAR,Phy_Addr,6);             
+ 474   1      
+ 475   1              //设置本机的IP地址,IP_ADDR为4字节unsigned char数组,自己定义
+ 476   1              //注意，网关IP必须与本机IP属于同一个子网，否则本机将无法找到网关
+ 477   1              Write_W5500_nByte(SIPR,IP_Addr,4);              
+ 478   1              
+ 479   1              //设置发送缓冲区和接收缓冲区的大小，参考W5500数据手册
+ 480   1              for(i=0;i<8;i++)
+ 481   1              {
+ 482   2                      Write_W5500_SOCK_1Byte(i,Sn_RXBUF_SIZE, 0x02);//Socket Rx memory size=2k
+ 483   2                      Write_W5500_SOCK_1Byte(i,Sn_TXBUF_SIZE, 0x02);//Socket Tx mempry size=2k
+ 484   2              }
+ 485   1      
+ 486   1              //设置重试时间，默认为2000(200ms) 
+ 487   1              //每一单位数值为100微秒,初始化时值设为2000(0x07D0),等于200毫秒
+ 488   1              Write_W5500_2Byte(RTR, 0x07d0);
+ 489   1      
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 9   
+
+ 490   1              //设置重试次数，默认为8次 
+ 491   1              //如果重发的次数超过设定值,则产生超时中断(相关的端口中断寄存器中的Sn_IR 超时位(TIMEOUT)置“1”)
+ 492   1              Write_W5500_1Byte(RCR,8);
+ 493   1      }
+ 494          
+ 495          /*******************************************************************************
+ 496          * 函数名  : Detect_Gateway
+ 497          * 描述    : 检查网关服务器
+ 498          * 输入    : 无
+ 499          * 输出    : 无
+ 500          * 返回值  : 成功返回TRUE(0xFF),失败返回FALSE(0x00)
+ 501          * 说明    : 无
+ 502          *******************************************************************************/
+ 503          unsigned char Detect_Gateway(void)
+ 504          {
+ 505   1              unsigned char ip_adde[4];
+ 506   1              ip_adde[0]=IP_Addr[0]+1;
+ 507   1              ip_adde[1]=IP_Addr[1]+1;
+ 508   1              ip_adde[2]=IP_Addr[2]+1;
+ 509   1              ip_adde[3]=IP_Addr[3]+1;
+ 510   1      
+ 511   1              //检查网关及获取网关的物理地址
+ 512   1              Write_W5500_SOCK_4Byte(0,Sn_DIPR,ip_adde);//向目的地址寄存器写入与本机IP不同的IP值
+ 513   1              Write_W5500_SOCK_1Byte(0,Sn_MR,MR_TCP);//设置socket为TCP模式
+ 514   1              Write_W5500_SOCK_1Byte(0,Sn_CR,OPEN);//打开Socket       
+ 515   1              Delay(5);//延时5ms      
+ 516   1              
+ 517   1              if(Read_W5500_SOCK_1Byte(0,Sn_SR) != SOCK_INIT)//如果socket打开失败
+ 518   1              {
+ 519   2                      Write_W5500_SOCK_1Byte(0,Sn_CR,CLOSE);//打开不成功,关闭Socket
+ 520   2                      return FALSE;//返回FALSE(0x00)
+ 521   2              }
+ 522   1      
+ 523   1              Write_W5500_SOCK_1Byte(0,Sn_CR,CONNECT);//设置Socket为Connect模式                                               
+ 524   1      
+ 525   1              do
+ 526   1              {
+ 527   2                      unsigned char j=0;
+ 528   2                      j=Read_W5500_SOCK_1Byte(0,Sn_IR);//读取Socket0中断标志寄存器
+ 529   2                      if(j!=0)
+ 530   2                      Write_W5500_SOCK_1Byte(0,Sn_IR,j);
+ 531   2                      Delay(5);//延时5ms 
+ 532   2                      if((j&IR_TIMEOUT) == IR_TIMEOUT)
+ 533   2                      {
+ 534   3                              return FALSE;   
+ 535   3                      }
+ 536   2                      else if(Read_W5500_SOCK_1Byte(0,Sn_DHAR) != 0xff)
+ 537   2                      {
+ 538   3                              Write_W5500_SOCK_1Byte(0,Sn_CR,CLOSE);//关闭Socket
+ 539   3                              return TRUE;                                                    
+ 540   3                      }
+ 541   2              }while(1);
+ 542   1      }
+ 543          
+ 544          /*******************************************************************************
+ 545          * 函数名  : Socket_Init
+ 546          * 描述    : 指定Socket(0~7)初始化
+ 547          * 输入    : s:待初始化的端口
+ 548          * 输出    : 无
+ 549          * 返回值  : 无
+ 550          * 说明    : 无
+ 551          *******************************************************************************/
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 10  
+
+ 552          void Socket_Init(SOCKET s)
+ 553          {
+ 554   1              //设置分片长度，参考W5500数据手册，该值可以不修改       
+ 555   1              Write_W5500_SOCK_2Byte(0, Sn_MSSR, 30);//最大分片字节数=30(0x001e)
+ 556   1              //设置指定端口
+ 557   1              switch(s)
+ 558   1              {
+ 559   2                      case 0:
+ 560   2                              //设置端口0的端口号
+ 561   2                              Write_W5500_SOCK_2Byte(0, Sn_PORT, S0_Port[0]*256+S0_Port[1]);  
+ 562   2                              
+ 563   2                              break;
+ 564   2      
+ 565   2                      case 1:
+ 566   2                              break;
+ 567   2      
+ 568   2                      case 2:
+ 569   2                              break;
+ 570   2      
+ 571   2                      case 3:
+ 572   2                              break;
+ 573   2      
+ 574   2                      case 4:
+ 575   2                              break;
+ 576   2      
+ 577   2                      case 5:
+ 578   2                              break;
+ 579   2      
+ 580   2                      case 6:
+ 581   2                              break;
+ 582   2      
+ 583   2                      case 7:
+ 584   2                              break;
+ 585   2      
+ 586   2                      default:
+ 587   2                              break;
+ 588   2              }
+ 589   1      }
+ 590          
+ 591          /*******************************************************************************
+ 592          * 函数名  : Socket_Connect
+ 593          * 描述    : 设置指定Socket(0~7)为客户端与远程服务器连接
+ 594          * 输入    : s:待设定的端口
+ 595          * 输出    : 无
+ 596          * 返回值  : 成功返回TRUE(0xFF),失败返回FALSE(0x00)
+ 597          * 说明    : 当本机Socket工作在客户端模式时,引用该程序,与远程服务器建立连接
+ 598          *                       如果启动连接后出现超时中断，则与服务器连接失败,需要重新调用该程序连接
+ 599          *                       该程序每调用一次,就与服务器产生一次连接
+ 600          *******************************************************************************/
+ 601          unsigned char Socket_Connect(SOCKET s)
+ 602          {
+ 603   1              Write_W5500_SOCK_1Byte(s,Sn_MR,MR_TCP);//设置socket为TCP模式
+ 604   1              Write_W5500_SOCK_1Byte(s,Sn_CR,OPEN);//打开Socket
+ 605   1              Delay(5);//延时5ms
+ 606   1              if(Read_W5500_SOCK_1Byte(s,Sn_SR)!=SOCK_INIT)//如果socket打开失败
+ 607   1              {
+ 608   2                      Write_W5500_SOCK_1Byte(s,Sn_CR,CLOSE);//打开不成功,关闭Socket
+ 609   2                      return FALSE;//返回FALSE(0x00)
+ 610   2              }
+ 611   1              Write_W5500_SOCK_1Byte(s,Sn_CR,CONNECT);//设置Socket为Connect模式
+ 612   1              return TRUE;//返回TRUE,设置成功
+ 613   1      }
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 11  
+
+ 614          
+ 615          /*******************************************************************************
+ 616          * 函数名  : Socket_Listen
+ 617          * 描述    : 设置指定Socket(0~7)作为服务器等待远程主机的连接
+ 618          * 输入    : s:待设定的端口
+ 619          * 输出    : 无
+ 620          * 返回值  : 成功返回TRUE(0xFF),失败返回FALSE(0x00)
+ 621          * 说明    : 当本机Socket工作在服务器模式时,引用该程序,等等远程主机的连接
+ 622          *                       该程序只调用一次,就使W5500设置为服务器模式
+ 623          *******************************************************************************/
+ 624          unsigned char Socket_Listen(SOCKET s)
+ 625          {
+ 626   1              Write_W5500_SOCK_1Byte(s,Sn_MR,MR_TCP);//设置socket为TCP模式 
+ 627   1              Write_W5500_SOCK_1Byte(s,Sn_CR,OPEN);//打开Socket       
+ 628   1              Delay(5);//延时5ms
+ 629   1              if(Read_W5500_SOCK_1Byte(s,Sn_SR)!=SOCK_INIT)//如果socket打开失败
+ 630   1              {
+ 631   2                      Write_W5500_SOCK_1Byte(s,Sn_CR,CLOSE);//打开不成功,关闭Socket
+ 632   2                      return FALSE;//返回FALSE(0x00)
+ 633   2              }       
+ 634   1              Write_W5500_SOCK_1Byte(s,Sn_CR,LISTEN);//设置Socket为侦听模式   
+ 635   1              Delay(5);//延时5ms
+ 636   1              if(Read_W5500_SOCK_1Byte(s,Sn_SR)!=SOCK_LISTEN)//如果socket设置失败
+ 637   1              {
+ 638   2                      Write_W5500_SOCK_1Byte(s,Sn_CR,CLOSE);//设置不成功,关闭Socket
+ 639   2                      return FALSE;//返回FALSE(0x00)
+ 640   2              }
+ 641   1      
+ 642   1              return TRUE;
+ 643   1      
+ 644   1              //至此完成了Socket的打开和设置侦听工作,至于远程客户端是否与它建立连接,则需要等待Socket中断，
+ 645   1              //以判断Socket的连接是否成功。参考W5500数据手册的Socket中断状态
+ 646   1              //在服务器侦听模式不需要设置目的IP和目的端口号
+ 647   1      }
+ 648          
+ 649          /*******************************************************************************
+ 650          * 函数名  : Socket_UDP
+ 651          * 描述    : 设置指定Socket(0~7)为UDP模式
+ 652          * 输入    : s:待设定的端口
+ 653          * 输出    : 无
+ 654          * 返回值  : 成功返回TRUE(0xFF),失败返回FALSE(0x00)
+ 655          * 说明    : 如果Socket工作在UDP模式,引用该程序,在UDP模式下,Socket通信不需要建立连接
+ 656          *                       该程序只调用一次，就使W5500设置为UDP模式
+ 657          *******************************************************************************/
+ 658          unsigned char Socket_UDP(SOCKET s)
+ 659          {
+ 660   1              Write_W5500_SOCK_1Byte(s,Sn_MR,MR_UDP);//设置Socket为UDP模式*/
+ 661   1              Write_W5500_SOCK_1Byte(s,Sn_CR,OPEN);//打开Socket*/
+ 662   1              Delay(5);//延时5ms
+ 663   1              if(Read_W5500_SOCK_1Byte(s,Sn_SR)!=SOCK_UDP)//如果Socket打开失败
+ 664   1              {
+ 665   2                      Write_W5500_SOCK_1Byte(s,Sn_CR,CLOSE);//打开不成功,关闭Socket
+ 666   2                      return FALSE;//返回FALSE(0x00)
+ 667   2              }
+ 668   1              else
+ 669   1                      return TRUE;
+ 670   1      
+ 671   1              //至此完成了Socket的打开和UDP模式设置,在这种模式下它不需要与远程主机建立连接
+ 672   1              //因为Socket不需要建立连接,所以在发送数据前都可以设置目的主机IP和目的Socket的端口号
+ 673   1              //如果目的主机IP和目的Socket的端口号是固定的,在运行过程中没有改变,那么也可以在这里设置
+ 674   1      }
+ 675          
+C51 COMPILER V9.02   W5500                                                                 09/10/2014 14:40:02 PAGE 12  
+
+ 676          /*******************************************************************************
+ 677          * 函数名  : W5500_Interrupt_Process
+ 678          * 描述    : W5500中断处理程序框架
+ 679          * 输入    : 无
+ 680          * 输出    : 无
+ 681          * 返回值  : 无
+ 682          * 说明    : 无
+ 683          *******************************************************************************/
+ 684          void W5500_Interrupt_Process(void)
+ 685          {
+ 686   1              unsigned char i,j;
+ 687   1      
+ 688   1      IntDispose:
+ 689   1      
+ 690   1              i=Read_W5500_1Byte(SIR);//读取端口中断标志寄存器        
+ 691   1              if((i & S0_INT) == S0_INT)//Socket0事件处理 
+ 692   1              {
+ 693   2                      j=Read_W5500_SOCK_1Byte(0,Sn_IR);//读取Socket0中断标志寄存器
+ 694   2                      Write_W5500_SOCK_1Byte(0,Sn_IR,j);
+ 695   2                      if(j&IR_CON)//在TCP模式下,Socket0成功连接 
+ 696   2                      {
+ 697   3                              S0_State|=S_CONN;//网络连接状态0x02,端口完成连接，可以正常传输数据
+ 698   3                      }
+ 699   2                      if(j&IR_DISCON)//在TCP模式下Socket断开连接处理
+ 700   2                      {
+ 701   3                              Write_W5500_SOCK_1Byte(0,Sn_CR,CLOSE);//关闭端口,等待重新打开连接 
+ 702   3                              Socket_Init(0);         //指定Socket(0~7)初始化,初始化端口0
+ 703   3                              S0_State=0;//网络连接状态0x00,端口连接失败
+ 704   3                      }
+ 705   2                      if(j&IR_SEND_OK)//Socket0数据发送完成,可以再次启动S_tx_process()函数发送数据 
+ 706   2                      {
+ 707   3                              S0_Data|=S_TRANSMITOK;//端口发送一个数据包完成 
+ 708   3                      }
+ 709   2                      if(j&IR_RECV)//Socket接收到数据,可以启动S_rx_process()函数 
+ 710   2                      {
+ 711   3                              S0_Data|=S_RECEIVE;//端口接收到一个数据包
+ 712   3                      }
+ 713   2                      if(j&IR_TIMEOUT)//Socket连接或数据传输超时处理 
+ 714   2                      {
+ 715   3                              Write_W5500_SOCK_1Byte(0,Sn_CR,CLOSE);// 关闭端口,等待重新打开连接                      
+ 716   3                              S0_State=0;//网络连接状态0x00,端口连接失败
+ 717   3                      }
+ 718   2              }
+ 719   1      
+ 720   1              if(Read_W5500_1Byte(SIR) != 0) 
+ 721   1                      goto IntDispose;
+ 722   1      }
+ 723          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1976    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     96      46
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
